@@ -1,0 +1,13 @@
+class_name Msg
+ 
+enum Type
+{
+UNSPECIFIED = 0,
+USER_INFO = 1,
+LOBBY_LIST = 2,
+NEW_LOBBY = 3,
+JOIN_LOBBY = 4,
+LEFT_LOBBY = 5,
+LOBBY_MESSAGE = 6,
+HOST = 9
+}
