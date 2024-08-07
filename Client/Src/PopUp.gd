@@ -1,7 +1,7 @@
 extends Control
 class_name PopUp
 
-@onready var m_label : Label = $MarginContainer/VBoxContainer/Label
+@onready var m_label : Label = $MarginContainer/VBoxContainer/MarginContainer/Label
 var m_msg : String = "PlaceHolderText"
 
 func mInit(msg : String) -> void:

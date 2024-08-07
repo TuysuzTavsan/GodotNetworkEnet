@@ -18,3 +18,7 @@ config/icon="res://icon.svg"
 [autoload]
 
 Client="*res://Src/Singletons/client.gd"
+
+[gui]
+
+theme/custom="res://Misc/projectTheme.tres"

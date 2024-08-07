@@ -22,10 +22,9 @@ offset_right = 125.0
 offset_bottom = 110.0
 grow_horizontal = 2
 
-[node name="ColorRect" type="ColorRect" parent="MarginContainer"]
-custom_minimum_size = Vector2(250, 0)
+[node name="Panel" type="Panel" parent="MarginContainer"]
 layout_mode = 2
-color = Color(2.16588e-07, 0.438863, 0.270771, 1)
+theme_type_variation = &"UpBannerPanel"
 
 [node name="Label" type="Label" parent="MarginContainer"]
 layout_mode = 2
