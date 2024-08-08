@@ -41,17 +41,27 @@ func _mPoll() -> void:
 	
 	match eventType:	#We dont process EVENT_CONNECT because we dont want any other connection than server.
 		ENetConnection.EVENT_CONNECT:
+			_mAddClient(peer)
 			Logger.mLogInfo("New peer connected.")
 
 		ENetConnection.EVENT_DISCONNECT:
 			Logger.mLogInfo("Peer with name: " + _mGetClient(peer).m_userName + " disconnected.")
+			_mEraseClient(peer)
 
 		ENetConnection.EVENT_ERROR:
 			Logger.mLogError("Error occured in host. Aborting application.")
 			get_tree().quit(-1)
 
 		ENetConnection.EVENT_RECEIVE:
-			Logger.mLogInfo("Received packet from client: " + _mGetClient(peer).m_userName + ".")
+			Logger.mLogInfo("Received packet form client: " + _mGetClient(peer).m_name + ".")
+			var packetIn : PacketIn = PacketIn.new(peer.get_packet(), _mGetClient(peer))
+			_mProcessPakcet(packetIn)
+
+
+
+func _mProcessPakcet(packetIn : PacketIn) -> void:
+	pass
+
 
 
 func _mEraseClient(packetPeer : ENetPacketPeer) -> void:

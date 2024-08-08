@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=32 format=3 uid="uid://g381w6krnxk7"]
+[gd_resource type="Theme" load_steps=37 format=3 uid="uid://g381w6krnxk7"]
 
 [ext_resource type="Texture2D" uid="uid://dm7a4164qq78j" path="res://Assets/Tiny Swords/UI/Banners/Banner_Vertical.png" id="1_4gg4b"]
 [ext_resource type="Texture2D" uid="uid://dn3qghv835ka5" path="res://Assets/Tiny Swords/UI/Buttons/Button_Hover.png" id="1_83uaq"]
@@ -14,6 +14,7 @@
 [ext_resource type="Texture2D" uid="uid://bshwbafo1dyj8" path="res://Assets/Tiny Swords/UI/Banners/Carved_9Slides.png" id="8_epj7c"]
 [ext_resource type="Texture2D" uid="uid://cvepbiyuvyytb" path="res://Assets/Tiny Swords/UI/Banners/Carved_Regular.png" id="9_ek6ql"]
 [ext_resource type="Texture2D" uid="uid://dd7yqk6km225f" path="res://Assets/Tiny Swords/UI/Banners/Banner_Connection_Up.png" id="13_uxucy"]
+[ext_resource type="Texture2D" uid="uid://dk4k8ovjhwb3e" path="res://Assets/Tiny Swords/UI/Pointers/02.png" id="15_y2wh1"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_htvs3"]
 texture = ExtResource("1_4gg4b")
@@ -161,6 +162,43 @@ expand_margin_top = 48.0
 expand_margin_right = 64.0
 expand_margin_bottom = 48.0
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_xfbda"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_tpd27"]
+content_margin_left = 16.0
+content_margin_top = 16.0
+content_margin_right = 16.0
+content_margin_bottom = 16.0
+texture = ExtResource("15_y2wh1")
+texture_margin_left = 32.0
+texture_margin_top = 32.0
+texture_margin_right = 32.0
+texture_margin_bottom = 32.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_r37ea"]
+content_margin_left = 16.0
+content_margin_top = 16.0
+content_margin_right = 16.0
+content_margin_bottom = 16.0
+texture = ExtResource("15_y2wh1")
+texture_margin_left = 32.0
+texture_margin_top = 32.0
+texture_margin_right = 32.0
+texture_margin_bottom = 32.0
+modulate_color = Color(5.29438e-06, 0.639637, 0.844605, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_02ewd"]
+content_margin_left = 16.0
+content_margin_top = 16.0
+content_margin_right = 16.0
+content_margin_bottom = 16.0
+texture = ExtResource("15_y2wh1")
+texture_margin_left = 32.0
+texture_margin_top = 32.0
+texture_margin_right = 32.0
+texture_margin_bottom = 32.0
+modulate_color = Color(1, 0.129412, 0.298039, 1)
+
 [resource]
 default_font = ExtResource("5_mbkm5")
 default_font_size = 20
@@ -211,3 +249,8 @@ RedButton/styles/normal = SubResource("StyleBoxTexture_0wwej")
 RedButton/styles/pressed = SubResource("StyleBoxTexture_dfy2q")
 UpBannerPanel/base_type = &"Panel"
 UpBannerPanel/styles/panel = SubResource("StyleBoxTexture_7r2fe")
+VSeparator/styles/separator = SubResource("StyleBoxEmpty_xfbda")
+littleButton/base_type = &"Button"
+littleButton/styles/hover = SubResource("StyleBoxTexture_tpd27")
+littleButton/styles/normal = SubResource("StyleBoxTexture_r37ea")
+littleButton/styles/pressed = SubResource("StyleBoxTexture_02ewd")
