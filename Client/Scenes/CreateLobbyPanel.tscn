@@ -1,0 +1,82 @@
+[gd_scene load_steps=2 format=3 uid="uid://byqyk021r2cta"]
+
+[ext_resource type="Script" path="res://Src/createLobbyPanel.gd" id="1_xtsfn"]
+
+[node name="CreateLobbyPanel" type="Control"]
+process_mode = 3
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_xtsfn")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -105.5
+offset_top = -124.0
+offset_right = 105.5
+offset_bottom = 124.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="Panel" parent="MarginContainer"]
+layout_mode = 2
+theme_type_variation = &"BannerPannel"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Create New Lobby"
+
+[node name="LobbyNameEdit" type="LineEdit" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+placeholder_text = "Enter Lobby Name"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "MaxPlayers"
+
+[node name="MaxPlayersOption" type="OptionButton" parent="MarginContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+alignment = 1
+icon_alignment = 1
+item_count = 5
+selected = 0
+popup/item_0/text = "2"
+popup/item_0/id = 1
+popup/item_1/text = "3"
+popup/item_1/id = 2
+popup/item_2/text = "4"
+popup/item_2/id = 3
+popup/item_3/text = "5"
+popup/item_3/id = 3
+popup/item_4/text = "6"
+popup/item_4/id = 4
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="CancelButton" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Cancel"
+
+[node name="CreateButton" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+disabled = true
+text = "Create"
+
+[connection signal="text_changed" from="MarginContainer/VBoxContainer/LobbyNameEdit" to="." method="_onLobbyNameEditChanged"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer/CancelButton" to="." method="_onCancelPressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer/CreateButton" to="." method="_onCreatePressed"]

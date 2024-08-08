@@ -55,9 +55,10 @@ func mRemoveClient(client : Client) -> void:
 #Get lobby info as dictionary to send clients when they are searching lobbies.
 func mGetLobbyInfo() -> Dictionary:
 	var info : Dictionary = {
-		"name" : m_name,
-		"players" : (str(m_clients.size()) + "/" + str(m_capacity)),
-		"status" : m_isSealed
+		"lobbyName" : m_name,
+		"playerCount" : str(m_clients.size()),
+		"capacity" : str(m_capacity),
+		"isSealed" : m_isSealed
 	}
 
 	return info

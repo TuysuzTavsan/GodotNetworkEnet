@@ -19,6 +19,7 @@ signal _m_connection_error()
 signal _m_disconnected()
 
 func _ready() -> void:
+	process_mode = Node.PROCESS_MODE_ALWAYS
 	var error : Error = m_client.create_host(m_MAX_CONNECTIONS, m_CHANNELS)
 	if(error == OK):
 		Logger.mLogInfo("Created client successfully.")
@@ -28,12 +29,20 @@ func _ready() -> void:
 
 func _exit_tree() -> void:
 	Logger.mLogInfo("Destroying client.")
-	m_client.destroy()
+	if(m_client):
+		m_client.destroy()
 
 func _process(_delta):
 	_mPoll()
 
 ###################################### PUBLIC FUNCTIONS START #####################################
+
+#Disconnect client and create host to refresh its state
+func mDisconnect() -> void:
+	m_server = null
+	m_client.destroy()
+
+	_ready()
 
 #This is a coroutine and must be called with await. True if connection attemp succeeds.
 func mConnectServer() -> bool:
@@ -61,7 +70,7 @@ func mGetConnectionState() -> ENetPacketPeer.PeerState:
 	else:
 		return ENetPacketPeer.STATE_DISCONNECTED
 
-func mSendPacket(msgType : Msg.Type, data : String = str(0)) -> void:
+func mSendPacket(msgType : Msg.Type, data = str(0)) -> void:
 
 	var dictToSend : Dictionary = {
 		"protocol" : msgType,
@@ -91,6 +100,8 @@ func _mPoll() -> void:
 	match eventType:	#We dont process EVENT_CONNECT because we dont want any other connection than server.
 		m_client.EVENT_DISCONNECT:
 			_m_disconnected.emit()
+			mDisconnect() #Will also set m_server to null which is usefull.
+			_mReturnToMainMenuWithPopUp("Disconnected.")
 			
 		m_client.EVENT_ERROR:
 			Logger.mLogError("Error occured in Enet connection. Aborting application.")
@@ -113,5 +124,16 @@ func _mPollConnectionStatus(connection : ENetPacketPeer, seconds : int) -> ENetP
 			return state
 	
 	return state
+
+func _mReturnToMainMenuWithPopUp(msgToShow : String) -> void:
+	for child in get_tree().root.get_children(): #Clean every node.
+		child.queue_free()
+
+	var mainMenu = load("res://Scenes/MainMenu.tscn").instantiate()
+	var popUp : PopUp = load("res://Scenes/PopUp.tscn").instantiate() as PopUp
+	popUp.mInit(msgToShow)
+	get_tree().root.add_child(mainMenu)
+	mainMenu.add_child(popUp)
+
 
 ###################################### PRIVATE FUNCTIONS END ######################################

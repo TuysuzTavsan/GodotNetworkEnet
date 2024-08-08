@@ -5,27 +5,26 @@ var m_popUpScene : PackedScene = load("res://Scenes/PopUp.tscn")
 var m_connectingPanelScene : PackedScene = load("res://Scenes/ConnectingPanel.tscn")
 var m_lobbyMenuScene : PackedScene = load("res://Scenes/lobbyMenu.tscn")
 
+func _ready() -> void:
+	if(Client.mIsConnected()):
+		#We need to reset client to its fresh state.
+		Client.mDisconnect()
+
 func _onPlayPressed() -> void:
 	var userNameSubmitPanel : UserNameSubmitPanel = m_userNameSubmitPanelScene.instantiate() as UserNameSubmitPanel
 	userNameSubmitPanel._m_UserNameSubmitted.connect(_onUserNameSubmitted)
-	add_child(userNameSubmitPanel)
-	get_tree().paused = true
+	add_child(userNameSubmitPanel) #Adding this as child will make the scene paused.
 
 func _onQuitPressed() -> void:
 	get_tree().quit(0)
 
-
 func _onUserNameSubmitted(userName : String) -> void:
 	var connectingPanel : ConnectingPanel = m_connectingPanelScene.instantiate() as ConnectingPanel
+	connectingPanel.mInit(userName) #Store it on connectingPannel
+	connectingPanel._m_connectionResulted.connect(_onConnectAttemptResulted)
+	add_child(connectingPanel) #Will make the tree paused and will call _onConnectionResult when the attemp is resulted.
 
-	get_tree().paused = true
-	add_child(connectingPanel)
-
-	var result : bool = await Client.mConnectServer()
-
-	get_tree().paused = false
-	connectingPanel.queue_free()
-
+func _onConnectAttemptResulted(result : bool, userName : String) -> void:
 	var popUp : PopUp = m_popUpScene.instantiate() as PopUp
 	if(result):
 		popUp.mInit("Successfully connected to server.")

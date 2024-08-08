@@ -46,12 +46,14 @@ alignment = 1
 
 [node name="ConnectButton" type="Button" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
+disabled = true
 text = "Connect"
 
 [node name="CancelButton" type="Button" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
 text = "Cancel"
 
+[connection signal="text_changed" from="MarginContainer/VBoxContainer/LineEdit" to="." method="_onTextChanged"]
 [connection signal="text_submitted" from="MarginContainer/VBoxContainer/LineEdit" to="." method="_onTextSubmitted"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/ConnectButton" to="." method="_onConnectPressed"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/CancelButton" to="." method="_onCancelPressed"]

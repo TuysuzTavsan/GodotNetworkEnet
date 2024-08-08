@@ -1,5 +1,5 @@
 extends Control
-class_name ConnectingPanel
+class_name InformationPanel
 
 @onready var m_label : Label = $MarginContainer/Label
 
@@ -7,26 +7,14 @@ const M_ANIMATON_TIMER : float = 1.0
 const M_MAX_DOTS : int = 3
 var m_timerSum : float = 0.0
 var m_textDotCount : int = 0
-var m_userName : String = "DefaultUserName"
+var m_msg : String = "DefaultUserName"
 
-signal _m_connectionResulted(result : bool) #true if client connected to server false otherwise.
+func mInit(msgToShow : String) -> void:
+	m_msg = msgToShow
 
-func _enter_tree() -> void:
-	get_tree().paused = true
-
-func _exit_tree() -> void:
-	get_tree().paused = false
-
-func mInit(userName : String) -> void:
-	m_userName = userName
-
-# Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	var result : bool = await Client.mConnectServer()
-	_m_connectionResulted.emit(result, m_userName)
-	queue_free()
+	m_label.text = m_msg
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	_mAnimateConnectingString(delta)
 

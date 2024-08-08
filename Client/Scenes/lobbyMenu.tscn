@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://0e5rob0yp7wh"]
+[gd_scene load_steps=3 format=3 uid="uid://0e5rob0yp7wh"]
 
 [ext_resource type="Script" path="res://Src/lobbyMenu.gd" id="1_i0nq0"]
+[ext_resource type="PackedScene" uid="uid://uonyfi0c5qd1" path="res://Scenes/LobbyListItem.tscn" id="2_i1sop"]
 
 [node name="LobbyMenu" type="Control"]
 layout_mode = 3
@@ -82,6 +83,26 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_type_variation = &"littleButton"
 text = "Refresh"
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="VScrollBar" type="VScrollBar" parent="MarginContainer/VBoxContainer/MarginContainer/VBoxContainer/MarginContainer"]
+custom_minimum_size = Vector2(0, 250)
+layout_mode = 2
+size_flags_horizontal = 1
+
+[node name="LobbyListPivot" type="VBoxContainer" parent="MarginContainer/VBoxContainer/MarginContainer/VBoxContainer/MarginContainer/VScrollBar"]
+layout_mode = 2
+offset_top = 12.0
+offset_right = 497.0
+offset_bottom = 12.0
+
+[node name="LobbyListItem2" parent="MarginContainer/VBoxContainer/MarginContainer/VBoxContainer/MarginContainer/VScrollBar/LobbyListPivot" instance=ExtResource("2_i1sop")]
+layout_mode = 2
+
+[node name="LobbyListItem3" parent="MarginContainer/VBoxContainer/MarginContainer/VBoxContainer/MarginContainer/VScrollBar/LobbyListPivot" instance=ExtResource("2_i1sop")]
+layout_mode = 2
 
 [node name="HSeparator2" type="HSeparator" parent="MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 50)
