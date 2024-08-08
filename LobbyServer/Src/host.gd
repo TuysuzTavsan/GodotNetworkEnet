@@ -98,6 +98,7 @@ func _mCreateNewLobby(ownerClient : Client, lobbyName : String, capacity : int) 
 		ownerClient.mSendMsg(Msg.Type.NEW_LOBBY, str(0)) # 0 means fail for lobby created feedback.
 	else:
 		var lobby : Lobby = Lobby.new(lobbyName, ownerClient, capacity)
+		lobby._m_timeOut.connect(_onLobbyTimeOut)
 		m_lobbies.push_back(lobby)
 		add_child(lobby)
 		#Send user that their lobby is created.

@@ -1,7 +1,7 @@
 extends Control
 
 
-@onready var m_lobbyListPivot : VBoxContainer = $MarginContainer/VBoxContainer/MarginContainer/VBoxContainer/VScrollBar/LobbyListPivot
+@onready var m_lobbyListPivot : VBoxContainer = $MarginContainer/VBoxContainer/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer
 
 var m_mainMenuScene : PackedScene = load("res://Scenes/MainMenu.tscn")
 var m_lobbyListItemScene : PackedScene = load("res://Scenes/LobbyListItem.tscn")

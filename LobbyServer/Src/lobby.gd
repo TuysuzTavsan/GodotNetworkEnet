@@ -51,6 +51,14 @@ func mRemoveClient(client : Client) -> void:
 	else:
 		Logger.mLogError("Cant find client " + client.m_userName + " to remove from lobby.")
 
+func mProcessLobbyMessage(fromClient : Client, msg : String) -> void:
+
+	var dictToSend : Dictionary = {
+		"userName" : fromClient.m_userName,
+		"msg" : msg
+	}
+
+	_mBroadcastExceptSender(fromClient, Msg.Type.LOBBY_MESSAGE, dictToSend)
 
 #Get lobby info as dictionary to send clients when they are searching lobbies.
 func mGetLobbyInfo() -> Dictionary:
@@ -62,3 +70,17 @@ func mGetLobbyInfo() -> Dictionary:
 	}
 
 	return info
+
+
+################################## PRIVATE FUNCTIONS #############################
+
+func _mBroadcastExceptSender(fromCLient : Client, type : Msg.Type, data) -> void:
+	for client : Client in m_clients:
+		if(client != fromCLient):
+			client.mSendMsg(type, data)
+
+func _mBroadcast(type : Msg.Type, data) -> void:
+	for client : Client in m_clients:
+		client.mSendMsg(type, data)
+
+################################## PRIVATE FUNCTIONS #############################
