@@ -61,10 +61,10 @@ func mGetConnectionState() -> ENetPacketPeer.PeerState:
 	else:
 		return ENetPacketPeer.STATE_DISCONNECTED
 
-func mSendPacket(msgType : Msg.Type, data : String) -> void:
+func mSendPacket(msgType : Msg.Type, data : String = str(0)) -> void:
 
 	var dictToSend : Dictionary = {
-		"type" : msgType,
+		"protocol" : msgType,
 		"data" : data,
 	}
 

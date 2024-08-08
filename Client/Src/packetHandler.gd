@@ -9,10 +9,10 @@ var m_subscribers : Dictionary = {}
 
 func mForwardPacket(packet : PacketIn) -> bool:
 	
-	var subscriber = m_subscribers.get(packet.m_topProt)
+	var subscriber = m_subscribers.get(packet.m_msgType)
 	
 	if(subscriber != null):
-		m_subscribers[packet.m_topProt].mHandle(packet)
+		m_subscribers[packet.m_msgType].mHandle(packet)
 		Logger.mLogInfo("Forwarding packet to handler...")
 		return true
 	else:
