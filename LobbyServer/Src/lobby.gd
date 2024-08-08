@@ -39,6 +39,13 @@ func mAddClient(client : Client) -> void:
 		m_clients.push_back(client)
 		Logger.mLogInfo("Added client to lobby: " + m_name)
 		client.mSendMsg(Msg.Type.JOIN_LOBBY, str(1)) #1 means success for join lobby feedback.
+
+		var dictToSend : Dictionary = {
+			"playerName" : client.m_userName,
+			"isHost" : false
+		}
+
+		_mBroadcastExceptSender(client, Msg.Type.JOIN_LOBBY, dictToSend) 
 	else:
 		Logger.mLogError("Cant add client to lobby: " + m_name)
 		client.mSendMsg(Msg.Type.JOIN_LOBBY, str(2)) # 0 means capacity is full for feedback to join lobby.
@@ -46,8 +53,13 @@ func mAddClient(client : Client) -> void:
 func mRemoveClient(client : Client) -> void:
 	if(m_clients.has(client)):
 		m_clients.erase(client)
-		client.mSendMsg(Msg.Type.LEFT_LOBBY, str(1)) # 1 means successfully left lobby for client.
-		#client doesnt really need to check for left lobby messsage. But we will send it anyway.
+
+		var dictToSend : Dictionary = {
+			"playerName" : client.m_userName,
+		}
+		
+		_mBroadcast(Msg.Type.LEFT_LOBBY, dictToSend) 
+
 	else:
 		Logger.mLogError("Cant find client " + client.m_userName + " to remove from lobby.")
 

@@ -1,0 +1,27 @@
+[gd_scene load_steps=3 format=3 uid="uid://b3trbepjwxbd1"]
+
+[ext_resource type="Script" path="res://Src/playerListItem.gd" id="1_scq00"]
+[ext_resource type="Texture2D" uid="uid://c7axvuu502r4" path="res://Assets/Tiny Swords/UI/Icons/Regular_10.png" id="2_h6io6"]
+
+[node name="PlayerListItem" type="MarginContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_scq00")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="PlayerNameLabel" type="Label" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 1
+text = "DefaultPlayerName"
+vertical_alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 4
+texture = ExtResource("2_h6io6")
+stretch_mode = 4

@@ -13,12 +13,14 @@ var m_client : ENetConnection = ENetConnection.new() #Self
 var m_server : ENetPacketPeer = null #Connection object on ENet
 var m_peerID : int = -1 #Id of this cliebt
 var m_packetHandler : PacketHandler = PacketHandler.new()
+var m_userName : String = "DefaultUserName"
 
 signal _m_connected()
 signal _m_connection_error()
 signal _m_disconnected()
 
 func _ready() -> void:
+	m_packetHandler.mSubscribe(Msg.Type.USER_INFO, self)
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	var error : Error = m_client.create_host(m_MAX_CONNECTIONS, m_CHANNELS)
 	if(error == OK):
@@ -36,6 +38,11 @@ func _process(_delta):
 	_mPoll()
 
 ###################################### PUBLIC FUNCTIONS START #####################################
+
+func mHandle(packetIn : PacketIn) -> void:
+	match packetIn.m_msgType:
+		Msg.Type.USER_INFO:
+			m_userName = packetIn.m_data["userName"] as String
 
 #Disconnect client and create host to refresh its state
 func mDisconnect() -> void:
