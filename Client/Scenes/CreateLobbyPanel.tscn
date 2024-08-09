@@ -78,5 +78,6 @@ disabled = true
 text = "Create"
 
 [connection signal="text_changed" from="MarginContainer/VBoxContainer/LobbyNameEdit" to="." method="_onLobbyNameEditChanged"]
+[connection signal="text_submitted" from="MarginContainer/VBoxContainer/LobbyNameEdit" to="." method="_onLobbyNameSubmitted"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer/CancelButton" to="." method="_onCancelPressed"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer/CreateButton" to="." method="_onCreatePressed"]

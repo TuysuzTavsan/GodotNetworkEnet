@@ -1,0 +1,24 @@
+[gd_scene load_steps=2 format=3 uid="uid://bt21gtg5quu8f"]
+
+[ext_resource type="Script" path="res://Src/joiningLobbyPanel.gd" id="1_3hi8g"]
+
+[node name="JoiningLobbyPanel" type="MarginContainer"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -87.0
+offset_top = 39.0
+offset_right = 88.0
+offset_bottom = 78.0
+grow_horizontal = 2
+script = ExtResource("1_3hi8g")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 2
+theme_type_variation = &"LabelPanelYellow"
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 2
+text = "Joining Lobby"
+horizontal_alignment = 1
+vertical_alignment = 1

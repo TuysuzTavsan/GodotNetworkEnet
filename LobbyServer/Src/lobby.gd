@@ -19,11 +19,12 @@ func _init(lobbyName : String, lobbyOwner : Client, capacity : int) -> void:
 	m_name = lobbyName
 	m_owner = lobbyOwner
 	m_capacity = capacity
+	m_clients.push_back(lobbyOwner)
 
 func _exit_tree() -> void:
 	Logger.mLogInfo("Deleting Lobby: " + m_name)
 	for client : Client in m_clients:
-		client.mSendMsg(Msg.Type.LEFT_LOBBY, str(3)) # 3 Means timeout for lobby as a feedback to client.
+		client.mSendMsg(Msg.Type.LEFT_LOBBY_FEEDBACK, str(3)) # 3 Means timeout for lobby as a feedback to client.
 
 func _process(delta: float) -> void:
 	m_lifeTime += delta
@@ -38,30 +39,53 @@ func mAddClient(client : Client) -> void:
 	if(m_clients.size() < m_capacity):
 		m_clients.push_back(client)
 		Logger.mLogInfo("Added client to lobby: " + m_name)
-		client.mSendMsg(Msg.Type.JOIN_LOBBY, str(1)) #1 means success for join lobby feedback.
+		client.mSendMsg(Msg.Type.JOIN_LOBBY_FEEDBACK, str(1)) #1 means success for join lobby feedback.
 
 		var dictToSend : Dictionary = {
-			"playerName" : client.m_userName,
+			"userName" : client.m_userName,
 			"isHost" : false
 		}
 
-		_mBroadcastExceptSender(client, Msg.Type.JOIN_LOBBY, dictToSend) 
+		_mBroadcastExceptSender(client, Msg.Type.JOIN_LOBBY_FEEDBACK, dictToSend) 
 	else:
 		Logger.mLogError("Cant add client to lobby: " + m_name)
-		client.mSendMsg(Msg.Type.JOIN_LOBBY, str(2)) # 0 means capacity is full for feedback to join lobby.
+		client.mSendMsg(Msg.Type.JOIN_LOBBY_FEEDBACK, str(2)) # 0 means capacity is full for feedback to join lobby.
 
 func mRemoveClient(client : Client) -> void:
 	if(m_clients.has(client)):
 		m_clients.erase(client)
 
-		var dictToSend : Dictionary = {
-			"playerName" : client.m_userName,
-		}
+		#Change ownership of the lobby if required.
+		if(client == m_owner):
+			if(m_clients.size() > 0):
+				m_owner = m_clients[0]
+				Logger.mLogInfo("Owner of the lobby: " + m_name + " is now: " \
+				+ m_owner.m_userName + ".")
+				
+				var sendDict : Dictionary = {
+					"userName" : m_owner.m_userName,
+					"isHost" : true
+				}
+				#Inform all players that host is changed.
+				Logger.mLogInfo("Informing all players that owner of the lobby: " + m_name\
+				+ " is changed.")
+				_mBroadcast(Msg.Type.HOST_FEEDBACK, sendDict)
+			else:
+				Logger.mLogInfo("Lobby: " + m_name + " is now empty.")
+				m_owner = null
 		
-		_mBroadcast(Msg.Type.LEFT_LOBBY, dictToSend) 
+		var dictToSend : Dictionary = {
+			"userName" : client.m_userName
+		}
+
+		#Inform all players that a player left lobby.
+		Logger.mLogInfo("Informing all players that client: " + client.m_userName\
+		+ " left the lobby: " + m_name + ".")
+		_mBroadcast(Msg.Type.LEFT_LOBBY_FEEDBACK, dictToSend) 
 
 	else:
-		Logger.mLogError("Cant find client " + client.m_userName + " to remove from lobby.")
+		Logger.mLogError("Cant find client " + client.m_userName + " to remove from lobby: "\
+		+ m_name + ".")
 
 func mProcessLobbyMessage(fromClient : Client, msg : String) -> void:
 
@@ -70,7 +94,24 @@ func mProcessLobbyMessage(fromClient : Client, msg : String) -> void:
 		"msg" : msg
 	}
 
-	_mBroadcastExceptSender(fromClient, Msg.Type.LOBBY_MESSAGE, dictToSend)
+	Logger.mLogInfo("Broadcasting msg from client: " + fromClient.m_userName\
+	+ " to players in lobby: " + m_name + ".")
+	_mBroadcastExceptSender(fromClient, Msg.Type.LOBBY_MESSAGE_FEEDBACK, dictToSend)
+
+func mSendPlayerList(toClient : Client) -> void:
+
+	var arrayToSend : Array[Dictionary] = []
+
+	for client : Client in m_clients:
+		var dictToSend = {
+			"userName" : client.m_userName,
+			"isHost" : client == m_owner
+		}
+		arrayToSend.push_back(dictToSend)
+	
+	Logger.mLogInfo("Sending player list in lobby: " + m_name\
+	+ " to client: " + toClient.m_userName + ".")
+	toClient.mSendMsg(Msg.Type.PLAYER_LIST_FEEDBACK, arrayToSend)
 
 #Get lobby info as dictionary to send clients when they are searching lobbies.
 func mGetLobbyInfo() -> Dictionary:

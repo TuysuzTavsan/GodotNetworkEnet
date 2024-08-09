@@ -75,49 +75,93 @@ func _mProcessPacket(packetIn : PacketIn) -> void:
 			_mAddClientToLobby(packetIn.m_from, lobbyName)
 
 		Msg.Type.LEFT_LOBBY:
-			var lobbyName : String = packetIn.m_data["lobbyName"] as String
-			_mRemoveCLientFromLobby(packetIn.m_from, lobbyName)
+			_mHandleClientLeft(packetIn.m_from)
+			
 			
 		Msg.Type.LOBBY_MESSAGE:
-			pass
+			Logger.mLogInfo("Received lobby message request from client: " + packetIn.m_from.m_userName + ".")
+			_mProcessLobbyMsgRequest(packetIn.m_from, packetIn.m_data as String)
+
+		Msg.Type.PLAYER_LIST:
+			Logger.mLogInfo("Received player list request from client: " + packetIn.m_from.m_userName + ".")
+			_mProcessPlayerListRequest(packetIn.m_from)
+
+func _mHandleClientLeft(leftClient : Client) -> void:
+	Logger.mLogInfo("Received left lobby from client: " + leftClient.m_userName + ".")
+	var lobby : Lobby = _mFindLobbyByClient(leftClient)
+	if(lobby):
+		lobby.mRemoveClient(leftClient)
+	else:
+		Logger.mLogError("Cant find any lobby to remove client: " + leftClient.m_userName + ".")
+
+func _mProcessPlayerListRequest(toClient : Client) -> void:
+	var lobby : Lobby = _mFindLobbyByClient(toClient)
+	if(lobby):
+		lobby.mSendPlayerList(toClient)
+	else:
+		Logger.mLogWarning("Cant find lobby which client: " + toClient.m_userName\
+		+ " is in.")
+
+func _mProcessLobbyMsgRequest(fromClient : Client, msg : String) -> void:
+	var lobby : Lobby = _mFindLobbyByClient(fromClient)
+	if(lobby):
+		lobby.mProcessLobbyMessage(fromClient, msg)
+	else:
+		Logger.mLogWarning("Lobby message request is received from client: "\
+		+ fromClient.m_userName + ". Cant find any lobby that has client as player.")
 
 func _mSetClientName(client : Client, userName : String) -> void:
+	Logger.mLogInfo("Received username for client: " + userName)
 	client.m_userName = userName
 
+	var dictToSend : Dictionary = {
+		"userName" : userName
+	}
+
+	Logger.mLogInfo("Sending username feedback to client: " + userName)
+	client.mSendMsg(Msg.Type.USER_INFO_FEEDBACK, dictToSend)
+
 func _mSendLobbyList(client : Client) -> void:
+	Logger.mLogInfo("Received lobby list request from client: " + client.m_userName)
+
 	var lobbyList : Array = []
 
 	for lobby : Lobby in m_lobbies:
 		lobbyList.push_back(lobby.mGetLobbyInfo())
 	
-	client.mSendMsg(Msg.Type.LOBBY_LIST, lobbyList)
+	Logger.mLogInfo("Sending lobby list feedback to client: " + client.m_userName)
+	client.mSendMsg(Msg.Type.LOBBY_LIST_FEEDBACK, lobbyList)
 
 func _mCreateNewLobby(ownerClient : Client, lobbyName : String, capacity : int) -> void:
+	Logger.mLogInfo("Received new lobby request from client: " + ownerClient.m_userName)
+
 	if(_mIsLobbyExist(lobbyName)):
 		#Cant create new lobby with same name.
-		ownerClient.mSendMsg(Msg.Type.NEW_LOBBY, str(0)) # 0 means fail for lobby created feedback.
+		#0 means failed to create lobby, reason: name is already taken.
+		Logger.mLogInfo("New lobby request from client : + ownerClient.m_userName" \
+		+ " is failed, lobby name is already taken.")
+		ownerClient.mSendMsg(Msg.Type.NEW_LOBBY_FEEDBACK, str(0)) 
 	else:
 		var lobby : Lobby = Lobby.new(lobbyName, ownerClient, capacity)
 		lobby._m_timeOut.connect(_onLobbyTimeOut)
 		m_lobbies.push_back(lobby)
 		add_child(lobby)
+		Logger.mLogInfo("New lobby with name: " + lobbyName + " is created.")
+		
 		#Send user that their lobby is created.
-		ownerClient.mSendMsg(Msg.Type.NEW_LOBBY, str(1)) # 1 means success for lobby created feedback.
+		Logger.mLogInfo("Sending client: " + ownerClient.m_userName + "successfull new lobby feedback.")
+		ownerClient.mSendMsg(Msg.Type.NEW_LOBBY_FEEDBACK, str(1)) # 1 means success for lobby created feedback.
 
 func _mAddClientToLobby(client : Client, lobbyName : String) -> void:
+	Logger.mLogInfo("Received join lobby request from client: " + client.m_userName\
+	+ " to lobby: " + lobbyName + ".")
 	if(not _mIsLobbyExist(lobbyName)):
-		client.mSendMsg(Msg.Type.JOIN_LOBBY, str(0)) # 0 means cant find lobby for lobby join feedback.
+		Logger.mLogInfo("Sending failed join lobby feedback to client: " + client.m_userName\
+		+ " reason: Cant find any lobby that matches the requested join lobby name.")
+		client.mSendMsg(Msg.Type.JOIN_LOBBY_FEEDBACK, str(0)) # 0 means cant find lobby for lobby join feedback.
 	else:
 		var lobby : Lobby = _mGetLobby(lobbyName)
 		lobby.mAddClient(client)
-
-func _mRemoveCLientFromLobby(client : Client, lobbyName : String) -> void:
-	if(not _mIsLobbyExist(lobbyName)):
-		Logger.mLogError("Cant find lobby: " + lobbyName + " for removing client: "\
-		+ client.m_userName + ".")
-	else:
-		var lobby : Lobby = _mGetLobby(lobbyName)
-		lobby.mRemoveClient(client)
 
 func _onLobbyTimeOut(lobby : Lobby) -> void:
 	Logger.mLogInfo("Lobby " + lobby.m_name + " reached its lifetime. Destroying lobby...")
@@ -139,7 +183,13 @@ func _mIsLobbyExist(lobbyName : String) -> bool:
 		
 	#No lobby with lobbyName exists.
 	return false
-	
+
+func _mFindLobbyByClient(client : Client) -> Lobby:
+	for lobby : Lobby in m_lobbies:
+		if(lobby.m_clients.find(client) != -1):
+			return lobby
+
+	return null
 
 func _mGetLobby(lobbyName : String) -> Lobby:
 	for lobby : Lobby in m_lobbies:

@@ -4,6 +4,7 @@ class_name UserNameSubmitPanel
 @onready var m_lineEdit : LineEdit = $MarginContainer/VBoxContainer/LineEdit
 @onready var m_connectButton : Button = $MarginContainer/VBoxContainer/ConnectButton
 
+var m_connectingPanelScene : PackedScene = load("res://Scenes/ConnectingPanel.tscn")
 signal _m_UserNameSubmitted(name : String)
 
 func _enter_tree() -> void:
@@ -13,8 +14,10 @@ func _exit_tree() -> void:
 	get_tree().paused = false
 
 func _onConnectPressed() -> void:
-	_m_UserNameSubmitted.emit(m_lineEdit.text)
-	queue_free()
+	var connectingPanel : ConnectingPanel = m_connectingPanelScene.instantiate() as ConnectingPanel
+	var userName : String = m_lineEdit.text
+	connectingPanel.mInit(userName) #Store it on connectingPannel
+	add_child(connectingPanel) #Will make the tree paused and will call _onConnectionResult when the attemp is resulted.
 
 func _onTextSubmitted(_new_text:String) -> void:
 	_onConnectPressed()

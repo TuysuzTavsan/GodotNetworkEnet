@@ -20,8 +20,13 @@ signal _m_connection_error()
 signal _m_disconnected()
 
 func _ready() -> void:
-	m_packetHandler.mSubscribe(Msg.Type.USER_INFO, self)
-	process_mode = Node.PROCESS_MODE_ALWAYS
+	#This is the only msgType Client will listen to. All other msg types will be listened from menus.
+	m_packetHandler.mSubscribe(Msg.Type.USER_INFO_FEEDBACK, self)
+
+	#Scenes often call pause to control msg flow to server. 
+	#We dont want network to pause.
+	process_mode = Node.PROCESS_MODE_ALWAYS 
+
 	var error : Error = m_client.create_host(m_MAX_CONNECTIONS, m_CHANNELS)
 	if(error == OK):
 		Logger.mLogInfo("Created client successfully.")
@@ -39,9 +44,13 @@ func _process(_delta):
 
 ###################################### PUBLIC FUNCTIONS START #####################################
 
+#Generic mHandle function that will be called by m_packetHandler : PacketHandler,
+# whenever a msg of type whic is subscribed to is received.
 func mHandle(packetIn : PacketIn) -> void:
 	match packetIn.m_msgType:
-		Msg.Type.USER_INFO:
+		Msg.Type.USER_INFO_FEEDBACK:
+			Logger.mLogInfo("Username feedback received from server.")
+			Logger.mLogInfo("Setting username to: " + (packetIn.m_data["userName"] as String))
 			m_userName = packetIn.m_data["userName"] as String
 
 #Disconnect client and create host to refresh its state
@@ -134,7 +143,8 @@ func _mPollConnectionStatus(connection : ENetPacketPeer, seconds : int) -> ENetP
 
 func _mReturnToMainMenuWithPopUp(msgToShow : String) -> void:
 	for child in get_tree().root.get_children(): #Clean every node.
-		child.queue_free()
+		if(child != self):
+			child.queue_free()
 
 	var mainMenu = load("res://Scenes/MainMenu.tscn").instantiate()
 	var popUp : PopUp = load("res://Scenes/PopUp.tscn").instantiate() as PopUp

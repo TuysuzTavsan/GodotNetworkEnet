@@ -1,4 +1,5 @@
 extends Control
+class_name Lobby
 
 @onready var m_chatLineEdit : LineEdit = $MarginContainer/VBoxContainer/HBoxContainer/MarginContainer2/VBoxContainer/HBoxContainer/ChatLineEdit
 @onready var m_sendButton : Button = $MarginContainer/VBoxContainer/HBoxContainer/MarginContainer2/VBoxContainer/HBoxContainer/SendButton
@@ -21,34 +22,69 @@ func _ready() -> void:
 	m_lobbyNameLabel.text = m_lobbyName
 	_mAddPlayer(Client.m_userName, m_isHost)
 
-	Client.m_packetHandler.mSubscribe(Msg.Type.LOBBY_MESSAGE, self)
-	Client.m_packetHandler.mSubscribe(Msg.Type.JOIN_LOBBY, self)
-	Client.m_packetHandler.mSubscribe(Msg.Type.LEFT_LOBBY, self)
-	Client.m_packetHandler.mSubscribe(Msg.Type.HOST, self)
+	Client.m_packetHandler.mSubscribe(Msg.Type.PLAYER_LIST_FEEDBACK, self)
+	Client.m_packetHandler.mSubscribe(Msg.Type.LOBBY_MESSAGE_FEEDBACK, self)
+	Client.m_packetHandler.mSubscribe(Msg.Type.JOIN_LOBBY_FEEDBACK, self)
+	Client.m_packetHandler.mSubscribe(Msg.Type.LEFT_LOBBY_FEEDBACK, self)
+	Client.m_packetHandler.mSubscribe(Msg.Type.HOST_FEEDBACK, self)
 
+	#Request player list from server.
+	Client.mSendPacket(Msg.Type.PLAYER_LIST) 
+	
 
 ########################################### PUBLIC FUNCTIONS ################################################
 
 func mHandle(packetIn : PacketIn) -> void:
 	match packetIn.m_msgType:
-		Msg.Type.LOBBY_MESSAGE:
-			var fromPlayerName : String = packetIn.m_data["playerName"] as String
-			var msg : String = packetIn.m_data["msg"] as String
+		Msg.Type.PLAYER_LIST_FEEDBACK:
+			_mUpdatePlayerList(packetIn.m_data as Array)
 
-			_mAddMsgFromPlayer(fromPlayerName, msg)
+		Msg.Type.LOBBY_MESSAGE_FEEDBACK:
+			_mAddMsgFromPlayer(packetIn.m_data["userName"] as String, packetIn.m_data["msg"] as String)
 
-		Msg.Type.LEFT_LOBBY:
+		Msg.Type.LEFT_LOBBY_FEEDBACK:
 			
-			_mRemovePlayer(packetIn.m_data["playerName"] as String)
+			_mRemovePlayer(packetIn.m_data["userName"] as String)
 
-		Msg.Type.JOIN_LOBBY:
+		Msg.Type.JOIN_LOBBY_FEEDBACK:
+
+			#Since it is new joined player its not owner of the lobby.
+			_mAddPlayer(packetIn.m_data["userName"] as String, false) 
+
+		Msg.Type.HOST_FEEDBACK:
+			#Means we are the host now.
+			var playerName : String = packetIn.m_data["userName"] as String
+			_mUpdateLobbyOwnership(playerName)
+			_mChangeLobbyOwner(playerName)
 			
-			_mAddPlayer(packetIn.m_data["playerName"] as String, packetIn.m_data["isHost"] as bool)
 
-		Msg.Type.HOST:
-			pass
 
 ########################################### PUBLIC FUNCTIONS ################################################
+
+func _mUpdateLobbyOwnership(newOwnerName : String) -> void:
+	if(Client.m_userName == newOwnerName):
+		pass
+		#TODO update lobby owner specific buttons on the ui.
+
+func _mChangeLobbyOwner(ownerName : String) -> void:
+	if(Client.m_userName == ownerName):
+		m_isHost = true
+	
+	for playerListItem : PlayerListItem in m_playerListPivot.get_children():
+		if(playerListItem.m_playerName == ownerName):
+			playerListItem.mUpdateLobbyOwnership(true)
+		else:
+			playerListItem.mUpdateLobbyOwnership(false)
+
+	_mShowChatMsg(ownerName + " is the new lobby owner.")
+
+
+func _mUpdatePlayerList(playerArray : Array) -> void:
+	_mClearPlayerList()
+	for playerDict : Dictionary in playerArray:
+		var playerName : String = playerDict["userName"] as String
+		var isHost : bool = playerDict["isHost"] as bool
+		_mAddPlayer(playerName, isHost)
 
 func _mAddMsgFromPlayer(playerName : String, msg : String) -> void:
 	var chatItem : ChatItem = m_chatItemScene.instantiate() as ChatItem
@@ -80,10 +116,13 @@ func _mClearPlayerList() -> void:
 
 func _onReturnPressed() -> void:
 	var lobbyMenu = m_lobbyMenuScene.instantiate()
+	Client.mSendPacket(Msg.Type.LEFT_LOBBY)
 	get_parent().add_child(lobbyMenu)
 	queue_free()
 
 func _onChatSubmitted(new_text:String) -> void:
+	m_chatLineEdit.text = ""
+	_mShowChatMsg(Client.m_userName + ": " + new_text)
 	_mSendChatMessage(new_text)
 
 func _onChatLineEditChanged(new_text:String) -> void:
@@ -93,8 +132,9 @@ func _onChatLineEditChanged(new_text:String) -> void:
 		m_sendButton.disabled = true
 
 func _onSendPressed() -> void:
-	_mSendChatMessage(m_chatLineEdit.text)
+	_mShowChatMsg(Client.m_userName + ": " + m_chatLineEdit.text)
 	m_chatLineEdit.text = ""
+	_mSendChatMessage(m_chatLineEdit.text)
 
 func _mSendChatMessage(msg : String) -> void:
 	Client.mSendPacket(Msg.Type.LOBBY_MESSAGE, msg)

@@ -13,7 +13,7 @@ func _init(peer : ENetPacketPeer):
 ############################################# PUBLIC FUNCTIONS #############################################
 
 #Data is a VARIANT! we can send any data type we want.
-func mSendMsg(type : Msg.Type, data):
+func mSendMsg(type : Msg.Type, data = ""):
 	var arrayToSend : PackedByteArray = JSON.stringify({"protocol" : int(type), "data" : data}).to_utf8_buffer()
 
 	var result : int = m_eNetPeer.send(M_DEFAULT_CHANNEl, arrayToSend, ENetPacketPeer.FLAG_RELIABLE)

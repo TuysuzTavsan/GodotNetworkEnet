@@ -76,9 +76,12 @@ vertical_alignment = 1
 [node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
+size_flags_vertical = 3
 
 [node name="PlayersPivot" type="VBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer/VBoxContainer/ScrollContainer"]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 
 [node name="VSeparator" type="VSeparator" parent="MarginContainer/VBoxContainer/HBoxContainer"]
 custom_minimum_size = Vector2(100, 0)
