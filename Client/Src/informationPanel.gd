@@ -7,7 +7,7 @@ const M_ANIMATON_TIMER : float = 1.0
 const M_MAX_DOTS : int = 3
 var m_timerSum : float = 0.0
 var m_textDotCount : int = 0
-var m_msg : String = "DefaultUserName"
+var m_msg : String = "DefaultInformationMsg"
 
 func mInit(msgToShow : String) -> void:
 	m_msg = msgToShow

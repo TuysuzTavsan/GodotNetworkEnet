@@ -77,7 +77,6 @@ func _mProcessPacket(packetIn : PacketIn) -> void:
 		Msg.Type.LEFT_LOBBY:
 			_mHandleClientLeft(packetIn.m_from)
 			
-			
 		Msg.Type.LOBBY_MESSAGE:
 			Logger.mLogInfo("Received lobby message request from client: " + packetIn.m_from.m_userName + ".")
 			_mProcessLobbyMsgRequest(packetIn.m_from, packetIn.m_data as String)

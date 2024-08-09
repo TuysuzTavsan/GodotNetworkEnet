@@ -48,7 +48,7 @@ func _onCreatePressed() -> void:
 
 	var lobbyName : String = m_lobbyNameLineEdit.text
 	var capacity : int = m_maxPlayersOptionButton.get_item_text(m_maxPlayersOptionButton.get_selected_id()) as int
-
+	print(capacity)
 	var dataToSend : Dictionary = {
 		"lobbyName" : lobbyName,
 		"capacity" : capacity

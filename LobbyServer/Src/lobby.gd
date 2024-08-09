@@ -37,6 +37,13 @@ func _process(delta: float) -> void:
 #Returns true if clients added to lobby successfully else false.
 func mAddClient(client : Client) -> void:
 	if(m_clients.size() < m_capacity):
+		if(m_clients.size() == 0):
+			var dataToSend : Dictionary = {
+				"userName" : client.m_userName,
+				"isHost" : true
+			} 
+			client.mSendMsg(Msg.Type.HOST_FEEDBACK, dataToSend)
+			m_owner = client  
 		m_clients.push_back(client)
 		Logger.mLogInfo("Added client to lobby: " + m_name)
 		client.mSendMsg(Msg.Type.JOIN_LOBBY_FEEDBACK, str(1)) #1 means success for join lobby feedback.
@@ -117,8 +124,8 @@ func mSendPlayerList(toClient : Client) -> void:
 func mGetLobbyInfo() -> Dictionary:
 	var info : Dictionary = {
 		"lobbyName" : m_name,
-		"playerCount" : str(m_clients.size()),
-		"capacity" : str(m_capacity),
+		"playerCount" : m_clients.size(),
+		"capacity" : m_capacity,
 		"isSealed" : m_isSealed
 	}
 

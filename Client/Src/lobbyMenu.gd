@@ -12,6 +12,8 @@ var m_popUpScene : PackedScene = load("res://Scenes/PopUp.tscn")
 
 var m_lobbyName : String = ""
 
+signal _m_joinFeedbackReceived()
+
 func _ready() -> void:
 	Client.m_packetHandler.mSubscribe(Msg.Type.LOBBY_LIST_FEEDBACK, self)
 	Client.m_packetHandler.mSubscribe(Msg.Type.JOIN_LOBBY_FEEDBACK, self)
@@ -26,6 +28,7 @@ func mHandle(packetIn : PacketIn) -> void:
 			_mUpdateLobbyList(packetIn.m_data)
 		
 		Msg.Type.JOIN_LOBBY_FEEDBACK:
+			_m_joinFeedbackReceived.emit()
 			match packetIn.m_data as int:
 				0:
 					var popUp : PopUp = m_popUpScene.instantiate() as PopUp
@@ -62,6 +65,7 @@ func _mClearLobbyList() -> void:
 		child.queue_free()
 
 func _onJoinLobbyPressed(lobbyListItem : LobbyListItem) -> void:
+	get_tree().paused = true
 
 	var dictToSend : Dictionary = {
 		"lobbyName" : lobbyListItem.m_lobbyName
@@ -72,6 +76,9 @@ func _onJoinLobbyPressed(lobbyListItem : LobbyListItem) -> void:
 	var informatioPanel : InformationPanel = m_informationPanelScene.instantiate() as InformationPanel
 	informatioPanel.mInit("Joining lobby.")
 	add_child(informatioPanel)
+	await  _m_joinFeedbackReceived
+	informatioPanel.queue_free()
+	get_tree().paused = false
 
 func _onReturnPressed() -> void:
 	var mainMenu = m_mainMenuScene.instantiate()
