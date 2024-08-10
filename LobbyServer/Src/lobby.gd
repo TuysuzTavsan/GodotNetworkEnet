@@ -54,7 +54,7 @@ func mAddClient(client : Client) -> void:
 		}
 
 		_mBroadcastExceptSender(client, Msg.Type.JOIN_LOBBY_FEEDBACK, dictToSend)
-		m_lifeTime = M_LIFE_TIME #Reset timeout value.
+		m_lifeTime = 0 #Reset timeout value.
 	else:
 		Logger.mLogError("Cant add client to lobby: " + m_name)
 		client.mSendMsg(Msg.Type.JOIN_LOBBY_FEEDBACK, str(2)) # 0 means capacity is full for feedback to join lobby.
