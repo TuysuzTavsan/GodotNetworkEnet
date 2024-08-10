@@ -24,7 +24,7 @@ func _init(lobbyName : String, lobbyOwner : Client, capacity : int) -> void:
 func _exit_tree() -> void:
 	Logger.mLogInfo("Deleting Lobby: " + m_name)
 	for client : Client in m_clients:
-		client.mSendMsg(Msg.Type.LEFT_LOBBY_FEEDBACK, str(3)) # 3 Means timeout for lobby as a feedback to client.
+		client.mSendMsg(Msg.Type.LEFT_LOBBY) #This will force clients to exit lobby.
 
 func _process(delta: float) -> void:
 	m_lifeTime += delta
@@ -53,7 +53,8 @@ func mAddClient(client : Client) -> void:
 			"isHost" : false
 		}
 
-		_mBroadcastExceptSender(client, Msg.Type.JOIN_LOBBY_FEEDBACK, dictToSend) 
+		_mBroadcastExceptSender(client, Msg.Type.JOIN_LOBBY_FEEDBACK, dictToSend)
+		m_lifeTime = M_LIFE_TIME #Reset timeout value.
 	else:
 		Logger.mLogError("Cant add client to lobby: " + m_name)
 		client.mSendMsg(Msg.Type.JOIN_LOBBY_FEEDBACK, str(2)) # 0 means capacity is full for feedback to join lobby.

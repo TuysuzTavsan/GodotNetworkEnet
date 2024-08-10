@@ -28,6 +28,8 @@ PLAYER_LIST = 3,                #Request playerList from server. (lobby)
 NEW_LOBBY = 4,                  #Request new lobby from server.
 JOIN_LOBBY = 5,                 #Request to join lobby from server.
 LEFT_LOBBY = 6,                 #Inform server that user left.
+                                    #WARNING if this msg comes from lobbyserver.
+                                    #It means lobbyServer is kicking *this client from lobby.
 LOBBY_MESSAGE = 7,              #Inform server that chat msg is sent.
 
 USER_INFO_FEEDBACK = 8,         #Server feedback to USER_INFO. Will be used to set player name on client.

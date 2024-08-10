@@ -10,6 +10,7 @@ class_name Lobby
 var m_lobbyMenuScene : PackedScene = load("res://Scenes/lobbyMenu.tscn")
 var m_playerListItemScene : PackedScene = load("res://Scenes/PlayerListItem.tscn")
 var m_chatItemScene : PackedScene = load("res://Scenes/ChatItem.tscn")
+var m_popUpScene : PackedScene = load("res://Scenes/PopUp.tscn")
 
 var m_lobbyName : String = "DefaultLobbyName"
 var m_isHost : bool = false
@@ -27,6 +28,7 @@ func _ready() -> void:
 	Client.m_packetHandler.mSubscribe(Msg.Type.JOIN_LOBBY_FEEDBACK, self)
 	Client.m_packetHandler.mSubscribe(Msg.Type.LEFT_LOBBY_FEEDBACK, self)
 	Client.m_packetHandler.mSubscribe(Msg.Type.HOST_FEEDBACK, self)
+	Client.m_packetHandler.mSubscribe(Msg.Type.LEFT_LOBBY, self)
 
 	#Request player list from server.
 	Client.mSendPacket(Msg.Type.PLAYER_LIST) 
@@ -46,6 +48,14 @@ func mHandle(packetIn : PacketIn) -> void:
 			
 			_mRemovePlayer(packetIn.m_data["userName"] as String)
 
+		Msg.Type.LEFT_LOBBY:
+			var lobbyMenu = m_lobbyMenuScene.instantiate()
+			var popUp : PopUp = m_popUpScene.instantiate() as PopUp
+			popUp.mInit("Lobby timeOut.")
+			queue_free()
+			get_parent().add_child(lobbyMenu)
+			lobbyMenu.add_child(popUp)
+ 
 		Msg.Type.JOIN_LOBBY_FEEDBACK:
 
 			#Since it is new joined player its not owner of the lobby.
