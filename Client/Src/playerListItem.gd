@@ -24,7 +24,7 @@ func mUpdateLobbyOwnership(isOwner : bool) -> void:
 
 func mUpdateReadyState(isReady : bool) -> void:
 	m_isReady = isReady
-	m_readyButton.button_pressed = isReady
+	m_readyButton.set_pressed_no_signal(isReady)
 	m_readyButton.self_modulate = Color.GREEN if m_isReady else Color.WHITE
 
 func _ready() -> void:

@@ -8,12 +8,6 @@ var m_remainingLaunchTime : float = -1.0
 var m_popUpScene : PackedScene = load("res://Scenes/PopUp.tscn")
 var m_isOwner : bool = false
 
-func _enter_tree() -> void:
-	get_tree().paused = true
-
-func _exit_tree() -> void:
-	get_tree().paused = false
-
 func mInit(isLobbyOwner : bool, launchTime : float = 0.0) -> void:
 	m_isOwner = isLobbyOwner
 	m_remainingLaunchTime = launchTime

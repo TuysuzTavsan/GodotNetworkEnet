@@ -193,7 +193,22 @@ func _onLobbyTimeOut(lobby : Lobby) -> void:
 
 func _mEraseClient(packetPeer : ENetPacketPeer) -> void:
 	Logger.mLogInfo("Erasing client.")
-	m_clients.erase(_mGetClient(packetPeer))
+	var client : Client = _mGetClient(packetPeer)
+
+	#null check
+	if(not client):
+		return
+
+	var lobby : Lobby = _mFindLobbyByClient(client)
+
+	m_clients.erase(client)
+
+	#null check
+	if(not lobby):
+		return
+	
+	lobby.mRemoveClient(client)
+
 
 func _mAddClient(packetPeer : ENetPacketPeer) -> void:
 	Logger.mLogInfo("Adding new client.")

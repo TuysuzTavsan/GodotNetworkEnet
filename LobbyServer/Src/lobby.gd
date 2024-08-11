@@ -12,7 +12,6 @@ var m_owner : Client = null # Owner of this lobby. By Default it is the client w
 var m_name : String = "" # Name of this lobby.
 var m_capacity = -1 # Capacity of this lobby.
 var m_isSealed : bool = false #If its sealed it means players are in game and game is already started.
-var m_isGameStarting : bool = false #flag to check when needed.
 const M_TIMEOUT_SECS : int = 300 #Time value in seconds which this lobby will be destroyed upon timeOut. Needed when no player left in this lobby.
 const M_GAMESERVER_LAUNCH_SECS : int = 5 #Time value in seconds which this lobby will launch game server upon timeOut.
 
