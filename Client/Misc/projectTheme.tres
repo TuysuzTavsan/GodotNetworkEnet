@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=37 format=3 uid="uid://g381w6krnxk7"]
+[gd_resource type="Theme" load_steps=42 format=3 uid="uid://g381w6krnxk7"]
 
 [ext_resource type="Texture2D" uid="uid://dm7a4164qq78j" path="res://Assets/Tiny Swords/UI/Banners/Banner_Vertical.png" id="1_4gg4b"]
 [ext_resource type="Texture2D" uid="uid://dn3qghv835ka5" path="res://Assets/Tiny Swords/UI/Buttons/Button_Hover.png" id="1_83uaq"]
@@ -164,6 +164,46 @@ expand_margin_bottom = 50.0
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_xfbda"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4l1cj"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_8c205"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_04i8b"]
+content_margin_left = 16.0
+content_margin_top = 16.0
+content_margin_right = 16.0
+content_margin_bottom = 16.0
+texture = ExtResource("15_y2wh1")
+texture_margin_left = 32.0
+texture_margin_top = 32.0
+texture_margin_right = 32.0
+texture_margin_bottom = 32.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_e4sd3"]
+content_margin_left = 16.0
+content_margin_top = 16.0
+content_margin_right = 16.0
+content_margin_bottom = 16.0
+texture = ExtResource("15_y2wh1")
+texture_margin_left = 32.0
+texture_margin_top = 32.0
+texture_margin_right = 32.0
+texture_margin_bottom = 32.0
+modulate_color = Color(5.29438e-06, 0.639637, 0.844605, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_1dqes"]
+content_margin_left = 16.0
+content_margin_top = 16.0
+content_margin_right = 16.0
+content_margin_bottom = 16.0
+texture = ExtResource("15_y2wh1")
+texture_margin_left = 32.0
+texture_margin_top = 32.0
+texture_margin_right = 32.0
+texture_margin_bottom = 32.0
+modulate_color = Color(1, 0.129412, 0.298039, 1)
+
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_tpd27"]
 content_margin_left = 16.0
 content_margin_top = 16.0
@@ -250,6 +290,13 @@ RedButton/styles/pressed = SubResource("StyleBoxTexture_dfy2q")
 UpBannerPanel/base_type = &"Panel"
 UpBannerPanel/styles/panel = SubResource("StyleBoxTexture_7r2fe")
 VSeparator/styles/separator = SubResource("StyleBoxEmpty_xfbda")
+iconButton/base_type = &"Button"
+iconButton/colors/icon_disabled_color = Color(1, 1, 1, 1)
+iconButton/styles/disabled = SubResource("StyleBoxFlat_4l1cj")
+iconButton/styles/focus = SubResource("StyleBoxEmpty_8c205")
+iconButton/styles/hover = SubResource("StyleBoxTexture_04i8b")
+iconButton/styles/normal = SubResource("StyleBoxTexture_e4sd3")
+iconButton/styles/pressed = SubResource("StyleBoxTexture_1dqes")
 littleButton/base_type = &"Button"
 littleButton/styles/hover = SubResource("StyleBoxTexture_tpd27")
 littleButton/styles/normal = SubResource("StyleBoxTexture_r37ea")

@@ -1,0 +1,17 @@
+[gd_scene load_steps=2 format=3 uid="uid://cj67u6dm4uuf"]
+
+[ext_resource type="Script" path="res://Src/lobby.gd" id="1_rmlgh"]
+
+[node name="Lobby" type="Node"]
+script = ExtResource("1_rmlgh")
+
+[node name="LobbyTimer" type="Timer" parent="."]
+wait_time = 300.0
+one_shot = true
+
+[node name="GameServerLaunchTimer" type="Timer" parent="."]
+wait_time = 5.0
+one_shot = true
+
+[connection signal="timeout" from="LobbyTimer" to="." method="_onLobbyTimeout"]
+[connection signal="timeout" from="GameServerLaunchTimer" to="." method="_onGameServerLaunchTimer"]

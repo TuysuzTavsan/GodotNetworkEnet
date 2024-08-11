@@ -1,0 +1,32 @@
+[gd_scene load_steps=2 format=3 uid="uid://dwrgmjgk25n5s"]
+
+[ext_resource type="Script" path="res://Src/gameStartingPanel.gd" id="1_7ln4l"]
+
+[node name="GameStartingPanel" type="Control"]
+process_mode = 3
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_7ln4l")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -162.0
+offset_top = 60.0
+offset_right = 163.0
+offset_bottom = 100.0
+grow_horizontal = 2
+
+[node name="Panel" type="Panel" parent="MarginContainer"]
+layout_mode = 2
+theme_type_variation = &"LabelPanelRed"
+
+[node name="Label" type="Label" parent="MarginContainer"]
+layout_mode = 2
+text = "Game is Starting in: seconds"

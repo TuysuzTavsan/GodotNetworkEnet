@@ -6,11 +6,14 @@ class_name Lobby
 @onready var m_playerListPivot : VBoxContainer = $MarginContainer/VBoxContainer/HBoxContainer/MarginContainer/VBoxContainer/ScrollContainer/PlayersPivot
 @onready var m_chatListPivot : VBoxContainer = $MarginContainer/VBoxContainer/HBoxContainer/MarginContainer2/VBoxContainer/ScrollContainer/ChatPivot
 @onready var m_lobbyNameLabel : Label = $MarginContainer/VBoxContainer/MarginContainer/LobbyNameLabel
+@onready var m_startButton : Button = $MarginContainer/VBoxContainer/HBoxContainer2/StartButton
+
 
 var m_lobbyMenuScene : PackedScene = load("res://Scenes/lobbyMenu.tscn")
 var m_playerListItemScene : PackedScene = load("res://Scenes/PlayerListItem.tscn")
 var m_chatItemScene : PackedScene = load("res://Scenes/ChatItem.tscn")
 var m_popUpScene : PackedScene = load("res://Scenes/PopUp.tscn")
+var m_gameStartPanelScene : PackedScene = load("res://Scenes/GameStartingPanel.tscn")
 
 var m_lobbyName : String = "DefaultLobbyName"
 var m_isHost : bool = false
@@ -21,23 +24,28 @@ func mInit(lobbyName : String, isHost : bool) -> void:
 
 func _ready() -> void:
 	m_lobbyNameLabel.text = m_lobbyName
-	_mAddPlayer(Client.m_userName, m_isHost)
+	_mAddPlayer(Client.m_userName, m_isHost, false)
 
 	Client.m_packetHandler.mSubscribe(Msg.Type.PLAYER_LIST_FEEDBACK, self)
 	Client.m_packetHandler.mSubscribe(Msg.Type.LOBBY_MESSAGE_FEEDBACK, self)
 	Client.m_packetHandler.mSubscribe(Msg.Type.JOIN_LOBBY_FEEDBACK, self)
 	Client.m_packetHandler.mSubscribe(Msg.Type.LEFT_LOBBY_FEEDBACK, self)
+	Client.m_packetHandler.mSubscribe(Msg.Type.START_GAME, self)
+	Client.m_packetHandler.mSubscribe(Msg.Type.READY_FEEDBACK, self)
 	Client.m_packetHandler.mSubscribe(Msg.Type.HOST_FEEDBACK, self)
 	Client.m_packetHandler.mSubscribe(Msg.Type.LEFT_LOBBY, self)
 
 	#Request player list from server.
-	Client.mSendPacket(Msg.Type.PLAYER_LIST) 
+	Client.mSendPacket(Msg.Type.PLAYER_LIST)
 	
 
 ########################################### PUBLIC FUNCTIONS ################################################
 
 func mHandle(packetIn : PacketIn) -> void:
 	match packetIn.m_msgType:
+		Msg.Type.READY_FEEDBACK:
+			_mUpdatePlayerReadyStatus(packetIn.m_data["userName"] as String, packetIn.m_data["isReady"] as bool)
+
 		Msg.Type.PLAYER_LIST_FEEDBACK:
 			_mUpdatePlayerList(packetIn.m_data as Array)
 
@@ -59,22 +67,50 @@ func mHandle(packetIn : PacketIn) -> void:
 		Msg.Type.JOIN_LOBBY_FEEDBACK:
 
 			#Since it is new joined player its not owner of the lobby.
-			_mAddPlayer(packetIn.m_data["userName"] as String, false) 
+			_mAddPlayer(packetIn.m_data["userName"] as String, false, false) 
 
 		Msg.Type.HOST_FEEDBACK:
 			#Means we are the host now.
 			var playerName : String = packetIn.m_data["userName"] as String
 			_mUpdateLobbyOwnership(playerName)
 			_mChangeLobbyOwner(playerName)
+
+		Msg.Type.START_GAME:
+			#Means we need to instantiate gameStart panel.
+			var gameStartPanel : GameStartingPanel = m_gameStartPanelScene.instantiate() as GameStartingPanel
+			#Instantiate panel as regular player, not lobby owner.
+			gameStartPanel.mInit(false, packetIn.m_data["inSeconds"] as float)
+			add_child(gameStartPanel)
 			
 
 
 ########################################### PUBLIC FUNCTIONS ################################################
 
+func _mUpdatePlayerReadyStatus(playerName : String, isReady : bool) -> void:
+	for playerListItem : PlayerListItem in m_playerListPivot.get_children():
+		if(playerListItem.m_playerName == playerName):
+			playerListItem.mUpdateReadyState(isReady)
+			break
+	
+	_mUpdateCanGameStart()
+
+func _mUpdateCanGameStart() -> void:
+	if(not m_isHost):
+		m_startButton.disabled = true
+	else:
+		var canStart : bool = true
+		for playerListItem : PlayerListItem in m_playerListPivot.get_children():
+			if(playerListItem.m_isReady == false):
+				canStart = false
+				break
+		
+		m_startButton.disabled = not canStart
+
+
 func _mUpdateLobbyOwnership(newOwnerName : String) -> void:
 	if(Client.m_userName == newOwnerName):
-		pass
-		#TODO update lobby owner specific buttons on the ui.
+		m_isHost = true
+		_mUpdateCanGameStart()
 
 func _mChangeLobbyOwner(ownerName : String) -> void:
 	if(Client.m_userName == ownerName):
@@ -87,6 +123,7 @@ func _mChangeLobbyOwner(ownerName : String) -> void:
 			playerListItem.mUpdateLobbyOwnership(false)
 
 	_mShowChatMsg(ownerName + " is the new lobby owner.")
+	_mUpdateCanGameStart()
 
 
 func _mUpdatePlayerList(playerArray : Array) -> void:
@@ -94,7 +131,8 @@ func _mUpdatePlayerList(playerArray : Array) -> void:
 	for playerDict : Dictionary in playerArray:
 		var playerName : String = playerDict["userName"] as String
 		var isHost : bool = playerDict["isHost"] as bool
-		_mAddPlayer(playerName, isHost)
+		var isReady : bool = playerDict["isReady"] as bool
+		_mAddPlayer(playerName, isHost, isReady)
 
 func _mAddMsgFromPlayer(playerName : String, msg : String) -> void:
 	var chatItem : ChatItem = m_chatItemScene.instantiate() as ChatItem
@@ -106,9 +144,9 @@ func _mShowChatMsg(msg : String) -> void:
 	chatItem.mInit(msg) 
 	m_chatListPivot.add_child(chatItem)
 
-func _mAddPlayer(playerName : String, isHost : bool) -> void:
+func _mAddPlayer(playerName : String, isHost : bool, isReady : bool) -> void:
 	var playerListItem : PlayerListItem = m_playerListItemScene.instantiate() as PlayerListItem
-	playerListItem.mInit(playerName, isHost)
+	playerListItem.mInit(playerName, isHost, isReady)
 	m_playerListPivot.add_child(playerListItem)
 	_mShowChatMsg(playerName + " is joined.")
 
@@ -122,7 +160,6 @@ func _mRemovePlayer(playerName : String) -> void:
 func _mClearPlayerList() -> void:
 	for child in m_playerListPivot.get_children():
 		child.queue_free()
-
 
 func _onReturnPressed() -> void:
 	var lobbyMenu = m_lobbyMenuScene.instantiate()
@@ -148,3 +185,9 @@ func _onSendPressed() -> void:
 
 func _mSendChatMessage(msg : String) -> void:
 	Client.mSendPacket(Msg.Type.LOBBY_MESSAGE, msg)
+
+func _onStartGamePressed() -> void:
+	#gameStartingPanel will handle everything from here.
+	var gameStartPanel : GameStartingPanel = m_gameStartPanelScene.instantiate() as GameStartingPanel
+	gameStartPanel.mInit(true)
+	add_child(gameStartPanel)

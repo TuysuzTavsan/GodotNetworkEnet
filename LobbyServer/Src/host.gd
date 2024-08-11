@@ -8,6 +8,7 @@ const M_MAX_CHANNELS : int = 1
 const M_ADDRESS : String = "127.0.0.1"
 const M_PORT : int = 9999
 
+var m_lobbyScene : PackedScene = load("res://Scenes/Lobby.tscn")
 var m_clients : Array[Client] = []
 var m_lobbies : Array[Lobby] = []
 
@@ -62,6 +63,9 @@ func _mProcessPacket(packetIn : PacketIn) -> void:
 		Msg.Type.USER_INFO:
 			_mSetClientName(packetIn.m_from, packetIn.m_data)
 
+		Msg.Type.READY:
+			_mUpdateCLientReadyStatus(packetIn.m_from, packetIn.m_data["isReady"] as bool)
+
 		Msg.Type.LOBBY_LIST:
 			_mSendLobbyList(packetIn.m_from)
 
@@ -84,6 +88,25 @@ func _mProcessPacket(packetIn : PacketIn) -> void:
 		Msg.Type.PLAYER_LIST:
 			Logger.mLogInfo("Received player list request from client: " + packetIn.m_from.m_userName + ".")
 			_mProcessPlayerListRequest(packetIn.m_from)
+		
+		Msg.Type.START_GAME:
+			_mHandleStartGameRequest(packetIn.m_from)
+
+func _mHandleStartGameRequest(fromClient : Client) -> void:
+	Logger.mLogInfo("Received game start request from client: " + fromClient.m_userName + ".")
+	var lobby : Lobby = _mFindLobbyByClient(fromClient)
+	if(lobby):
+		lobby.mStartGame(fromClient)
+	else:
+		Logger.mLogError("Cant find any lobby to start game.")
+
+func _mUpdateCLientReadyStatus(fromClient : Client, isReady : bool) -> void:
+	Logger.mLogInfo("Received ready status from client: " + fromClient.m_userName + ".")
+	var lobby : Lobby = _mFindLobbyByClient(fromClient)
+	if(lobby):
+		lobby.mSetClientReadyStatus(fromClient, isReady)
+	else:
+		Logger.mLogError("Cant find any lobby to remove client: " + fromClient.m_userName + ".")
 
 func _mHandleClientLeft(leftClient : Client) -> void:
 	Logger.mLogInfo("Received left lobby from client: " + leftClient.m_userName + ".")
@@ -104,7 +127,7 @@ func _mProcessPlayerListRequest(toClient : Client) -> void:
 func _mProcessLobbyMsgRequest(fromClient : Client, msg : String) -> void:
 	var lobby : Lobby = _mFindLobbyByClient(fromClient)
 	if(lobby):
-		lobby.mProcessLobbyMessage(fromClient, msg)
+		lobby.mInputLobbyMessage(fromClient, msg)
 	else:
 		Logger.mLogWarning("Lobby message request is received from client: "\
 		+ fromClient.m_userName + ". Cant find any lobby that has client as player.")
@@ -138,10 +161,11 @@ func _mCreateNewLobby(ownerClient : Client, lobbyName : String, capacity : int) 
 		#Cant create new lobby with same name.
 		#0 means failed to create lobby, reason: name is already taken.
 		Logger.mLogInfo("New lobby request from client : + ownerClient.m_userName" \
-		+ " is failed, lobby name is already taken.")
+			+ " is failed, lobby name is already taken.")
 		ownerClient.mSendMsg(Msg.Type.NEW_LOBBY_FEEDBACK, str(0)) 
 	else:
-		var lobby : Lobby = Lobby.new(lobbyName, ownerClient, capacity)
+		var lobby : Lobby = m_lobbyScene.instantiate()
+		lobby.mInit(lobbyName, ownerClient, capacity)
 		lobby._m_timeOut.connect(_onLobbyTimeOut)
 		m_lobbies.push_back(lobby)
 		add_child(lobby)

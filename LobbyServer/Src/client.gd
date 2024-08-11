@@ -5,6 +5,7 @@ class_name Client
 
 var m_eNetPeer : ENetPacketPeer
 var m_userName : String = ""
+var m_isReady : bool = false
 const M_DEFAULT_CHANNEl : int = 0
 
 func _init(peer : ENetPacketPeer):

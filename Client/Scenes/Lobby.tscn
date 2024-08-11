@@ -139,3 +139,4 @@ text = "Start Game"
 [connection signal="text_submitted" from="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer2/VBoxContainer/HBoxContainer/ChatLineEdit" to="." method="_onChatSubmitted"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer2/VBoxContainer/HBoxContainer/SendButton" to="." method="_onSendPressed"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer2/ReturnButton" to="." method="_onReturnPressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer2/StartButton" to="." method="_onStartGamePressed"]
