@@ -22,3 +22,7 @@ Client="*res://Src/Singletons/client.gd"
 [gui]
 
 theme/custom="res://Misc/projectTheme.tres"
+
+[rendering]
+
+textures/canvas_textures/default_texture_filter=0
