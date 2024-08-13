@@ -1,10 +1,11 @@
 ## This project is in progress.
 
-## Godot Multiplayer proof of concept.
-    This project aims to demonstrate multiplayer game architecture with minimal setup.
+## Godot Multiplayer Proof of Concept.
+ This project aims to demonstrate multiplayer game architecture with minimal setup.
 You can explore source code to learn some stuff, or clone the whole project and make some changes to suit your game.
-You may or may not use the whole project in release stage. But while developing your dream multiplayer game, you will be in need of multiplayer backends to help you out.
+You may or may not use the whole project in release stage. But while developing your dream multiplayer game, you will be in need of multiplayer backend to help you out.
 Maybe you need a lobby system to test your dedicated servers. While you decide which backend you should choose, you can use this project as a placeholder.
+Or you can start to write your own backend. Until then this is a solid solution as it will save you time.
 
 > [!IMPORTANT]
 > While this repo is made for an example. This project is not beginner friendly.
@@ -12,13 +13,13 @@ Maybe you need a lobby system to test your dedicated servers. While you decide w
 > While this projects design is minimal, project itself is complex in some ways.
 
 
-    There are 3 seperated folders. Every folder is a seperate godot project. (version 4.2.2)
+ There are 3 seperated folders. Every folder is a seperate godot project. (version 4.2.2)
 - 1-Client: This is what players will use to explore lobbies and play the game.
 - 2-LobbyServer: This project only handles lobbies and starting game sessions.
 - 3-Dedicated Server: This is very similiar to client project in code, but it will manage game and every player. This is your typical authoritave game server.
 
 # How it works?
-    LobbyServer should be running in a port forwarded machine. Every client is free to explore lobbies, chat and start game sessions.
+ LobbyServer should be running in a port forwarded machine. Every client is free to explore lobbies, chat and start game sessions.
 Whenever a game session is started by lobby owner, lobbyServer will launch dedicated server with some arguments passed into it.
 These arguments are:
 
