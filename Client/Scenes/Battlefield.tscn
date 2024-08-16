@@ -129,15 +129,3 @@ layer_1/tile_data = PackedInt32Array(589826, 0, 4, 524290, 131072, 1, 458754, 13
 layer_2/name = "decorations"
 layer_2/z_index = 1
 layer_2/tile_data = PackedInt32Array()
-
-[node name="Marker2D" type="Marker2D" parent="."]
-position = Vector2(132, 393)
-
-[node name="Marker2D2" type="Marker2D" parent="."]
-position = Vector2(770, 319)
-
-[node name="Marker2D3" type="Marker2D" parent="."]
-position = Vector2(385, 502)
-
-[node name="Marker2D4" type="Marker2D" parent="."]
-position = Vector2(356, 199)

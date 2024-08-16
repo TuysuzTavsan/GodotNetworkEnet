@@ -1,12 +1,28 @@
 extends Node
 class_name Battlefield
 
-#Singleton class that will manage important networking features.
+#Battlefield is the main node that will manage game on both client and dedicated server.
+#For all @rpc calls to work, every rpc must exist on both projects.
+#Therefore there are a lot of similarities between client Battlefield script - dedicatedServer Battlefield script.
+#Only real difference is how this nodes initialize itself and creates peer for high level networking.
+#Everytime a player connects we will create player node with authority set to connected peer id.
+#Server will also create same player node with authority set to connected peer id.
+#Every client can only control player node which it owns.
+#For every other player node they have locally, it will be controlled by the server.
+#So basicly the real game is actually exists on the server.
+#What client see is actually a copy of that game state. And client only have control over its player character.
 
 const M_MAX_CLIENTS : int = 8
 const M_MAX_CHANNELS : int = 2
 var m_clientCount : int = -1
-var m_clients = []
+var m_playerScene : PackedScene = load("res://Scenes/Player.tscn")
+var m_players : Dictionary = {} #Key=id, value is the Player node.
+
+
+@onready var m_marker1 : Marker2D = $Marker2D
+@onready var m_marker2 : Marker2D = $Marker2D2
+@onready var m_marker3 : Marker2D = $Marker2D3
+@onready var m_marker4 : Marker2D = $Marker2D4
 
 func _ready() -> void:
 	# var args : Dictionary = _mFetchArguments()
@@ -29,7 +45,6 @@ func _ready() -> void:
 	#bind signals.
 	multiplayer.peer_connected.connect(_onPeerConnected)
 	multiplayer.peer_disconnected.connect(_onPeerDisconnected)
-
 
 #Create server with fetched arguments.
 func _mCreateServer(args : Dictionary) -> void:
@@ -86,30 +101,59 @@ func _mFetchArguments() -> Dictionary:
 	
 	return arguments
 
-func _onPeerConnected(id : int) -> void:
-	#Create a player for newly connected peer on every client.
-	_mAddNewPlayer.rpc(id)
-
-	#Create existing players on new players client.
-	if(m_clients.size() > 0):
-		_mAddExistingPlayers.rpc_id(id, m_clients)
+func _mGetRandomSpawnPosition() -> Vector2:
+	match randi_range(1, 4):
+		1:
+			return m_marker1.position
+		2:
+			return m_marker2.position
+		3:
+			return m_marker3.position
+		4:
+			return m_marker4.position
 	
-	m_clients.push_back(id)
+	return Vector2(0, 0)
+
+func _onPeerConnected(id : int) -> void:
+	#Create existing players on new players client with authority set to 1 (server).
+	if(m_players.size() > 0):
+		_mAddExistingPlayers(id, m_players.keys())
+
+	#Create a player for newly connected peer on every client.
+	_mAddNewPlayer.rpc(id) #This will create a player with authority set to id on dedicated server.
+	_mSetPlayerPosition.rpc(id, _mGetRandomSpawnPosition())
+
 
 func _onPeerDisconnected(id : int) -> void:
 	#Remove disconnected player on every client and this server.
 	_mRemovePlayer.rpc(id)
-	m_clients.erase(id)
+
+
+@rpc("authority", "call_local", "reliable", 1)
+func _mSetPlayerPosition(id : int, pos : Vector2) -> void:
+	var player : Player = m_players.get(id) as Player
+	player.position = pos
 
 @rpc("authority", "call_local", "reliable", 1)
 func _mRemovePlayer(id : int) -> void:
-	print("peer: " + str(id) + " removed.")
+	Logger.mLogInfo("removing peer: " + str(id) + ".")
+	var player : Player = m_players.get(id) as Player
+	m_players.erase(id)
+	player.queue_free()
 
+#This function will be called locally to create a player node that matching client is responsible from.
+#This function will also be called remote to add already existing player on client. (for replication.)
+#This function body is different on the client project. Dont get confused. Client will always set authority to 1.
 @rpc("authority", "call_local", "reliable", 1)
 func _mAddNewPlayer(id : int) -> void:
-	print("peer: " + str(id) + " added.")
+	Logger.mLogInfo("adding peer: " + str(id) + ".")
+	
+	var player : Player = m_playerScene.instantiate()
+	player.set_multiplayer_authority(id)
+	m_players[id] = player
+	add_child(player, true) #Always force readable names so rpc works.
 
-@rpc("authority", "call_remote", "reliable", 1)
-func _mAddExistingPlayers(_arr : Array) -> void:
-	for id in _arr:
-		print("Adding existing player with id: " + str(id))
+#Add existing players on client with id.
+func _mAddExistingPlayers(clientId : int, arr : Array) -> void:
+	for id in arr:
+		_mAddNewPlayer.rpc_id(clientId, id)

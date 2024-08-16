@@ -1,4 +1,4 @@
-[gd_scene load_steps=97 format=3 uid="uid://dbrnrf6gu7efc"]
+[gd_scene load_steps=90 format=3 uid="uid://dbrnrf6gu7efc"]
 
 [ext_resource type="Texture2D" uid="uid://bcswykciqmbry" path="res://Assets/Pirate by seartsy/Atk1-6frm.png" id="1_l06ka"]
 [ext_resource type="Script" path="res://Src/PlayerStateMachine/player.gd" id="1_uk02c"]
@@ -904,37 +904,6 @@ _data = {
 "run": SubResource("Animation_rd6xu")
 }
 
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_v2led"]
-animation = &"idle"
-
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_sup40"]
-animation = &"run"
-
-[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_n8q4e"]
-advance_mode = 2
-
-[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_16h3o"]
-advance_mode = 2
-advance_condition = &"isRunning"
-
-[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_wrmgr"]
-switch_mode = 1
-advance_mode = 2
-advance_expression = "! isRunning"
-
-[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_q2owk"]
-states/Start/position = Vector2(123, 150)
-states/idle/node = SubResource("AnimationNodeAnimation_v2led")
-states/idle/position = Vector2(306, 150)
-states/run/node = SubResource("AnimationNodeAnimation_sup40")
-states/run/position = Vector2(461, 150)
-transitions = ["Start", "idle", SubResource("AnimationNodeStateMachineTransition_n8q4e"), "idle", "run", SubResource("AnimationNodeStateMachineTransition_16h3o"), "run", "idle", SubResource("AnimationNodeStateMachineTransition_wrmgr")]
-
-[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_7utmv"]
-properties/0/path = NodePath(".:position")
-properties/0/spawn = true
-properties/0/replication_mode = 1
-
 [node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_uk02c")
 
@@ -950,11 +919,3 @@ libraries = {
 "": SubResource("AnimationLibrary_7a13a")
 }
 autoplay = "idle"
-
-[node name="AnimationTree" type="AnimationTree" parent="."]
-tree_root = SubResource("AnimationNodeStateMachine_q2owk")
-anim_player = NodePath("../AnimationPlayer")
-parameters/conditions/isRunning = false
-
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
-replication_config = SubResource("SceneReplicationConfig_7utmv")
