@@ -3,21 +3,25 @@ class_name Battlefield
 
 #Battlefield is the main node that will manage game on both client and dedicated server.
 #For all @rpc calls to work, every rpc must exist on both projects.
-#Therefore there are a lot of similarities between client Battlefield script - dedicatedServer Battlefield script.
+#To keep things simple and understandable every script related to gameplay is actually same on server and client.
 #Only real difference is how this nodes initialize itself and creates peer for high level networking.
+#Other then that there is no difference in terms of script files. All scripts will have some logic depending on type.
+#	type 1 : server
+#	type 2 : localPlayer = Actual player
+#	type 3 : puppetPlayer = copy of a playerState that exist on server.
+
 #Everytime a player connects we will create player node with authority set to connected peer id.
 #Server will also create same player node with authority set to connected peer id.
 #Every client can only control player node which it owns.
-#For every other player node they have locally, it will be controlled by the server.
-#So basicly the real game is actually exists on the server.
+#Every puppet player will be controlled by the server.
+#So basicly the real game actually exists on the server.
 #What client see is actually a copy of that game state. And client only have control over its player character.
 
 const M_MAX_CLIENTS : int = 8
 const M_MAX_CHANNELS : int = 2
-var m_clientCount : int = -1
 var m_playerScene : PackedScene = load("res://Scenes/Player.tscn")
-var m_players : Dictionary = {} #Key=id, value is the Player node.
-
+var m_players : Dictionary = {} # Key is id value is the player node.
+var m_netType : Net.Type = Net.Type.UNSPECIFIED
 
 @onready var m_marker1 : Marker2D = $Marker2D
 @onready var m_marker2 : Marker2D = $Marker2D2
@@ -25,32 +29,61 @@ var m_players : Dictionary = {} #Key=id, value is the Player node.
 @onready var m_marker4 : Marker2D = $Marker2D4
 
 func _ready() -> void:
-	# var args : Dictionary = _mFetchArguments()
-	# _mCreateServer(args)
+	var args : Dictionary = _mFetchArguments()
 
-	# #Store client count.
-	# m_clientCount = args.get("playerCount") as int
-	
-	var peer = ENetMultiplayerPeer.new()
-	peer.set_bind_ip("127.0.0.1")
-	var result = peer.create_server(9999, M_MAX_CHANNELS, M_MAX_CHANNELS)
+	if(args.has("client")):
+		_mCreateClient(args)
+		m_netType = Net.Type.LOCAL
+		return
+
+	_mCreateServer(args)
+	m_netType = Net.Type.SERVER
+
+func _mCreateClient(args : Dictionary) -> void:
+	multiplayer.connected_to_server.connect(_onConnectedServer)
+	multiplayer.server_disconnected.connect(_onServerDisconnected)
+	multiplayer.connection_failed.connect(_onConnectionFailed)
+
+	var address : String = args.get("address") as String
+	var port : int = args.get("port") as int
+
+	var peer : ENetMultiplayerPeer = ENetMultiplayerPeer.new()
+	if(address == null):
+		Logger.mLogError("Cant find address information on arguments. Aborting application")
+		get_tree().quit(-1)
+
+	if(port == null):
+		Logger.mLogError("Cant find port information on arguments. Aborting application")
+		get_tree().quit(-1)
+
+	var result = peer.create_client(address, port, 2)
 	if(result != OK):
-		Logger.mLogError("Cant create server on address: " + "127.0.0.1" + ":" + str(9999)\
-			+ " aborting application.")
+		Logger.mLogError("Can not create client. Aborting application.")
+		get_tree().quit(-1)
 	
-	Logger.mLogInfo("Created server on address: " + "127.0.0.1" + ":" + str(9999) + ".")
-	#Set multiplayer peer
+	Logger.mLogInfo("Created client successfully.")
+	
+	#This is same as get_tree().get_multiplayer.multiplayer_peer = peer
 	multiplayer.multiplayer_peer = peer
-	
-	#bind signals.
-	multiplayer.peer_connected.connect(_onPeerConnected)
-	multiplayer.peer_disconnected.connect(_onPeerDisconnected)
 
 #Create server with fetched arguments.
 func _mCreateServer(args : Dictionary) -> void:
 
-	var port = args.get("port")
-	var address = args.get("address")
+	var address : String = args.get("address") as String
+	var port : int = args.get("port") as int
+	var playerCount : int = args.get("playerCount") as int
+
+	if(address == null):
+		Logger.mLogError("Cant find address information on arguments. Aborting application")
+		get_tree().quit(-1)
+
+	if(port == null):
+		Logger.mLogError("Cant find port information on arguments. Aborting application")
+		get_tree().quit(-1)
+
+	if(playerCount == null):
+		Logger.mLogError("Cant find port playerCount on arguments. Aborting application")
+		get_tree().quit(-1)
 
 	var peer = ENetMultiplayerPeer.new()
 	peer.set_bind_ip(address)
@@ -82,37 +115,9 @@ func _mFetchArguments() -> Dictionary:
 			# with the value set to an empty string.
 			arguments[argument.lstrip("--")] = ""
 
-	#check if arguments are given.
-	var port : int = arguments.get("port") as int
-	var address : String = arguments.get("address") as String
-	var playerCount : int = arguments.get("playerCount") as int
-	
-	if(not port):
-		Logger.mLogError("Cant find start argument --port. Aborting application.")
-		get_tree().quit(-1)
-
-	if(not address):
-		Logger.mLogError("Cant find start argument --address. Aborting application.")
-		get_tree().quit(-1)
-
-	if(not playerCount):
-		Logger.mLogError("Cant find start argument --playerCount. Aborting application.")
-		get_tree().quit(-1)
 	
 	return arguments
 
-func _mGetRandomSpawnPosition() -> Vector2:
-	match randi_range(1, 4):
-		1:
-			return m_marker1.position
-		2:
-			return m_marker2.position
-		3:
-			return m_marker3.position
-		4:
-			return m_marker4.position
-	
-	return Vector2(0, 0)
 
 func _onPeerConnected(id : int) -> void:
 	#Create existing players on new players client with authority set to 1 (server).
@@ -120,14 +125,31 @@ func _onPeerConnected(id : int) -> void:
 		_mAddExistingPlayers(id, m_players.keys())
 
 	#Create a player for newly connected peer on every client.
-	_mAddNewPlayer.rpc(id) #This will create a player with authority set to id on dedicated server.
-	_mSetPlayerPosition.rpc(id, _mGetRandomSpawnPosition())
+	#This will create a player with authority set to id on dedicated server.
+	_mAddNewPlayer.rpc(id) 
+	if(m_netType == Net.Type.SERVER):
+		_mSetPlayerPosition.rpc(id, _mGetRandomSpawnPosition())
 
 
 func _onPeerDisconnected(id : int) -> void:
 	#Remove disconnected player on every client and this server.
 	_mRemovePlayer.rpc(id)
 
+#Called when connected to server. We dont have to do anything here, since server will call required functions for client.
+#This is here for convenience.
+func _onConnectedServer() -> void:
+	Logger.mLogInfo("Connected to server.")
+
+#Called when disconnected from server.
+#In normal scenerio server will control clients when the game ends, so if client disconnects before that, thats an error for sure.
+func _onServerDisconnected() -> void:
+	Logger.mLogError("Disconnected from server.")
+	get_tree().quit(-1)
+
+#Quit the application whenever connectionfails
+func _onConnectionFailed() -> void:
+	Logger.mLogError("Connection failed.")
+	get_tree().quit(-1)
 
 @rpc("authority", "call_local", "reliable", 1)
 func _mSetPlayerPosition(id : int, pos : Vector2) -> void:
@@ -143,13 +165,20 @@ func _mRemovePlayer(id : int) -> void:
 
 #This function will be called locally to create a player node that matching client is responsible from.
 #This function will also be called remote to add already existing player on client. (for replication.)
-#This function body is different on the client project. Dont get confused. Client will always set authority to 1.
+#Dont get confused. Client will always set authority to 1.
 @rpc("authority", "call_local", "reliable", 1)
 func _mAddNewPlayer(id : int) -> void:
 	Logger.mLogInfo("adding peer: " + str(id) + ".")
 	
 	var player : Player = m_playerScene.instantiate()
-	player.set_multiplayer_authority(id)
+
+	#Set multiplayer authority to given id.
+	if(m_netType == Net.Type.SERVER):
+		player.set_multiplayer_authority(id)
+	else:
+		player.set_multiplayer_authority(id if multiplayer.get_unique_id() == id else 1)
+		
+
 	m_players[id] = player
 	add_child(player, true) #Always force readable names so rpc works.
 
@@ -157,3 +186,16 @@ func _mAddNewPlayer(id : int) -> void:
 func _mAddExistingPlayers(clientId : int, arr : Array) -> void:
 	for id in arr:
 		_mAddNewPlayer.rpc_id(clientId, id)
+
+func _mGetRandomSpawnPosition() -> Vector2:
+	match randi_range(1, 4):
+		1:
+			return m_marker1.position
+		2:
+			return m_marker2.position
+		3:
+			return m_marker3.position
+		4:
+			return m_marker4.position
+	
+	return Vector2(0, 0)

@@ -12,11 +12,12 @@ class_name Battlefield
 #So basicly the real game is actually exists on the server.
 #What client see is actually a copy of that game state. And client only have control over its player character.
 
-var m_address : String = "127.0.0.1" #To playtest this scene with dedicated server running on background.
-var m_port : int = 9999 #To playtest this scene with dedicated server running on background.
+
 
 var m_playerScene : PackedScene = load("res://Scenes/Player.tscn")
 var m_players : Dictionary = {} #Key=id, value is the Player node.
+var m_address : String = "127.0.0.1" #To playtest this scene with dedicated server running on background.
+var m_port : int = 9999 #To playtest this scene with dedicated server running on background.
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:

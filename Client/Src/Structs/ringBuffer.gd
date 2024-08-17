@@ -1,5 +1,5 @@
 extends RefCounted
-class_name FrameBuffer
+class_name RingBuffer
 
 #classic ringbuffer to store player related sync data.
 
@@ -9,11 +9,11 @@ var m_index : int = 0
 func _init(bufferSize : int) -> void:
 	m_buffer.resize(bufferSize)
 
-func mPushBack(data) -> void:
+func PushBack(data) -> void:
 	m_buffer[m_index] = data
 	m_index = (m_index + 1) % m_buffer.size()
 
-func mGet(offset : int):
+func GetwOffset(offset : int):
 	assert(offset < m_buffer.size(), "offset cant be more then buffer size.")
 
 	return m_buffer[(m_index - offset) % m_buffer.size()]

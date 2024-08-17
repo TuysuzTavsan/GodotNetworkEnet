@@ -1,14 +1,20 @@
 extends PlayerState
 class_name PlayerIdle
 
+#IdleState of the player will listen any type of input and change state.
 
-#Additional parameters can be used to customize init function.
-#Because Player.mChangeState will pass additional parameters to PlayerState.new(params)
+#Default _init function for PlayerState
 func _init(_params : Dictionary = {}):
 	pass
 
-func _ready() -> void:
+func _enter_tree() -> void:
 	pass
+
+func _exit_tree() -> void:
+	pass
+
+func _ready() -> void:
+	m_player._mPlayAnimation("idle") 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:

@@ -1,4 +1,4 @@
-[gd_scene load_steps=90 format=3 uid="uid://dbrnrf6gu7efc"]
+[gd_scene load_steps=91 format=3 uid="uid://dbrnrf6gu7efc"]
 
 [ext_resource type="Texture2D" uid="uid://bcswykciqmbry" path="res://Assets/Pirate by seartsy/Atk1-6frm.png" id="1_l06ka"]
 [ext_resource type="Script" path="res://Src/PlayerStateMachine/player.gd" id="1_uk02c"]
@@ -14,6 +14,7 @@
 [ext_resource type="Texture2D" uid="uid://bcffn18cfy6eu" path="res://Assets/Pirate by seartsy/Jump-2frm.png" id="11_5674w"]
 [ext_resource type="Texture2D" uid="uid://d1dtym32yngpm" path="res://Assets/Pirate by seartsy/Fall-LandingGround-2frm.png" id="12_cme8i"]
 [ext_resource type="Texture2D" uid="uid://d1rgkk5frug7q" path="res://Assets/Pirate by seartsy/Run-6frm.png" id="13_oim86"]
+[ext_resource type="Script" path="res://Src/inputSyncer.gd" id="15_3fdw0"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_eyedx"]
 atlas = ExtResource("1_l06ka")
@@ -919,3 +920,6 @@ libraries = {
 "": SubResource("AnimationLibrary_7a13a")
 }
 autoplay = "idle"
+
+[node name="InputSyncer" type="Node" parent="."]
+script = ExtResource("15_3fdw0")

@@ -8,28 +8,10 @@ func _init(_params : Dictionary = {}):
 	pass
 
 func _enter_tree() -> void:
-	m_player.m_inputSyncer.mListenInput(InputSyncer.INPUT.ATTACK, self)
-	m_player.m_inputSyncer.mListenInput(InputSyncer.INPUT.JUMP, self)
-	m_player.m_inputSyncer.mListenInput(InputSyncer.INPUT.MOVE_LEFT, self)
-	m_player.m_inputSyncer.mListenInput(InputSyncer.INPUT.MOVE_RIGHT, self)
+	pass
 
 func _exit_tree() -> void:
-	m_player.m_inputSyncer.mStopListeningInput(InputSyncer.INPUT.ATTACK, self)
-	m_player.m_inputSyncer.mStopListeningInput(InputSyncer.INPUT.JUMP, self)
-	m_player.m_inputSyncer.mStopListeningInput(InputSyncer.INPUT.MOVE_LEFT, self)
-	m_player.m_inputSyncer.mStopListeningInput(InputSyncer.INPUT.MOVE_RIGHT, self)
-
-#generic function to listen input from InputSyncer.
-func mOnInput(inputType : InputSyncer.INPUT) -> void:
-	match inputType:
-		InputSyncer.INPUT.ATTACK:
-			pass
-		InputSyncer.INPUT.JUMP:
-			pass
-		InputSyncer.INPUT.MOVE_LEFT:
-			m_changeState.call(Player.STATES.RUN, {"isLeft" : true})
-		InputSyncer.INPUT.MOVE_RIGHT:
-			m_changeState.call(Player.STATES.RUN, {"isLeft" : false})
+	pass
 
 func _ready() -> void:
 	m_player._mPlayAnimation("idle") 
