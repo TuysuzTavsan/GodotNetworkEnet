@@ -14,6 +14,13 @@ func mClear() -> void:
 func mPopFront() -> INPUT.Type:
 	return m_events.pop_front()
 
+func mHas(inputType : INPUT.Type) -> bool:
+	for input : INPUT.Type in m_events:
+		if(input == inputType):
+			return true
+	
+	return false
+
 func mGetxAxisDirection() -> float:
 	var xDirection : float = 0.0 # -1 is left and 1 is right.
 	for input : INPUT.Type in m_events:

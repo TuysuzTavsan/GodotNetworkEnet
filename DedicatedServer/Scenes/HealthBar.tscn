@@ -1,0 +1,117 @@
+[gd_scene load_steps=7 format=3 uid="uid://dfmxn8c2hwa58"]
+
+[ext_resource type="Script" path="res://Src/healthBar.gd" id="1_5e3al"]
+[ext_resource type="Texture2D" uid="uid://vctehp0kjcl7" path="res://Assets/Pirate Bomb/7-Objects/11-Health Bar/Health Bar.png" id="2_3d60e"]
+[ext_resource type="Texture2D" uid="uid://mip6gsnrvrw5" path="res://Assets/Pirate Bomb/7-Objects/11-Health Bar/Heart.png" id="3_vw1qo"]
+
+[sub_resource type="Animation" id="Animation_e2pcr"]
+resource_name = "HearthAnimations"
+length = 15.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Hearth1:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(-0.0333333, 1, 3, 5),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(51, 32), Vector2(51, 25), Vector2(51, 39), Vector2(51, 32)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Hearth2:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 2, 4, 6),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(77, 32), Vector2(77, 25), Vector2(77, 39), Vector2(77, 32)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Hearth3:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 3, 5, 7),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(103, 32), Vector2(103, 25), Vector2(103, 39), Vector2(103, 32)]
+}
+
+[sub_resource type="Animation" id="Animation_hghwj"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Hearth1:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(51, 32)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Hearth2:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(77, 32)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Hearth3:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(103, 32)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_2lnbi"]
+_data = {
+"HearthAnimations": SubResource("Animation_e2pcr"),
+"RESET": SubResource("Animation_hghwj")
+}
+
+[node name="HealthBar" type="CanvasLayer"]
+script = ExtResource("1_5e3al")
+
+[node name="Background" type="Sprite2D" parent="."]
+texture = ExtResource("2_3d60e")
+centered = false
+
+[node name="Hearth1" type="Sprite2D" parent="."]
+position = Vector2(51, 32)
+texture = ExtResource("3_vw1qo")
+
+[node name="Hearth2" type="Sprite2D" parent="."]
+position = Vector2(77, 32)
+texture = ExtResource("3_vw1qo")
+
+[node name="Hearth3" type="Sprite2D" parent="."]
+position = Vector2(103, 32)
+texture = ExtResource("3_vw1qo")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_2lnbi")
+}
+autoplay = "HearthAnimations"
+speed_scale = 10.0

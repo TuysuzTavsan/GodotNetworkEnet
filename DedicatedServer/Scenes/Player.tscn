@@ -1,4 +1,4 @@
-[gd_scene load_steps=91 format=3 uid="uid://djtqkgswf00u1"]
+[gd_scene load_steps=93 format=3 uid="uid://djtqkgswf00u1"]
 
 [ext_resource type="Texture2D" uid="uid://bcswykciqmbry" path="res://Assets/Pirate by seartsy/Atk1-6frm.png" id="1_l06ka"]
 [ext_resource type="Script" path="res://Src/PlayerStateMachine/player.gd" id="1_uk02c"]
@@ -15,6 +15,8 @@
 [ext_resource type="Texture2D" uid="uid://d1dtym32yngpm" path="res://Assets/Pirate by seartsy/Fall-LandingGround-2frm.png" id="12_cme8i"]
 [ext_resource type="Texture2D" uid="uid://d1rgkk5frug7q" path="res://Assets/Pirate by seartsy/Run-6frm.png" id="13_oim86"]
 [ext_resource type="Script" path="res://Src/inputSyncer.gd" id="15_bf2ta"]
+[ext_resource type="Script" path="res://Src/camera.gd" id="16_yjfo4"]
+[ext_resource type="PackedScene" uid="uid://dfmxn8c2hwa58" path="res://Scenes/HealthBar.tscn" id="17_osg0x"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_eyedx"]
 atlas = ExtResource("1_l06ka")
@@ -923,3 +925,10 @@ autoplay = "idle"
 
 [node name="InputSyncer" type="Node" parent="."]
 script = ExtResource("15_bf2ta")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+enabled = false
+position_smoothing_enabled = true
+script = ExtResource("16_yjfo4")
+
+[node name="HealthBar" parent="." instance=ExtResource("17_osg0x")]

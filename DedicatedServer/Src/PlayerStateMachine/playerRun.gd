@@ -6,10 +6,9 @@ var m_args : Dictionary = {}
 #param will always have isLeft as argument.
 func _init(params : Dictionary = {}):
 	m_args = params
-
+	
 func _ready() -> void:
-	m_player._mSyncDirection(m_args["isLeft"] as bool)
-	m_player._mPlayAnimation("run")
+	m_player._mChangeAnimation("run")
 
 func _enter_tree() -> void:
 	pass
