@@ -24,6 +24,10 @@ func _onReliableInput(inputContainer : InputContainer, _frame : int) -> void:
 		match input:
 			INPUT.Type.JUMP:
 				m_changeState.call(Player.STATES.JUMP)
+			INPUT.Type.ATTACK:
+				m_changeState.call(Player.STATES.ATTACK)
+			INPUT.Type.FIRE:
+				m_changeState.call(Player.STATES.FIRE)
 
 #Will only be called on server.
 func _onUnreliableInput(inputContainer : InputContainer, _frame : int) -> void:
@@ -46,7 +50,7 @@ func _physics_process(_delta: float) -> void:
 				m_changeState.call(Player.STATES.RUN, {"isLeft" : true})
 			INPUT.Type.JUMP:
 				m_changeState.call(Player.STATES.JUMP)
-			# INPUT.Type.ATTACK:
-			# 	m_changeState.call(Player.STATES.ATTACK)
-			# INPUT.Type.FIRE:
-			# 	m_changeState.call(Player.STATES.FIRE)
+			INPUT.Type.ATTACK:
+				m_changeState.call(Player.STATES.ATTACK)
+			INPUT.Type.FIRE:
+				m_changeState.call(Player.STATES.FIRE)

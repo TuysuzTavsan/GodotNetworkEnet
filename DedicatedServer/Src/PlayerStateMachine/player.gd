@@ -27,7 +27,7 @@ static var m_states : Dictionary = {
 
 const M_RING_BUFFER_SIZE : int = 256
 const M_SPEED = 300.0
-const M_JUMP_VELOCITY = -400.0
+const M_JUMP_VELOCITY = -500.0
 const M_INTERPOLATIN_FACTOR : float = 10.0
 var m_netType : Net.Type = Net.Type.UNSPECIFIED
 var m_gravity : int = ProjectSettings.get_setting("physics/2d/default_gravity")
@@ -50,7 +50,6 @@ func _ready() -> void:
 	_mChangeState(STATES.IDLE)
 
 func _physics_process(delta: float) -> void:
-
 	if(not is_on_floor()):
 		velocity.y += delta * m_gravity
 

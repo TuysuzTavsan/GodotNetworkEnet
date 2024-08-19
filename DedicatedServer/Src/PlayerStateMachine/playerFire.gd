@@ -1,18 +1,20 @@
 extends PlayerState
 class_name  PlayerFire
 
-#State specific variants and logic should live here.
+#FireState of the player.	
+#Keep in mind that states only exist on local player and server.
 
-#Additional parameters can be used to customize init function.
-#Because XPersistantState.mChangeState will pass additional parameters to XFooState.new(params)
-func _init(_params : Dictionary = {}):
-	pass
+func _ready() -> void:
+	m_player._mChangeAnimation("gunOut")
+	m_player.m_animPlayer.animation_finished.connect(_onAnimFinished)
 
-#You can call generic XState process with super.
-func _process(_delta):
-	print("FOOOOOOOOO I am the XFooState")
-	
-	
-	#You can change state here.
-	#if(someCondition):
-		#m_virtualChangeFunc.call(XPersistantState.STATES.BAR, additionalParams)
+func _onAnimFinished(animName : String) -> void:
+	match animName:
+		"gunOut":
+			m_player._mChangeAnimation("gunShoot")
+		
+		"gunShoot":
+			m_player._mChangeAnimation("gunIn")
+		
+		"gunIn":
+			m_changeState.call(Player.STATES.IDLE)
