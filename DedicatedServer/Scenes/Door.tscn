@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://u070mm0fr7t3"]
+
+[ext_resource type="Texture2D" uid="uid://b5ve026kliwg7" path="res://Assets/Pirate Bomb/7-Objects/2-Door/1-Closed/1.png" id="1_eu5r5"]
+
+[node name="Door" type="Node2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0, -16)
+texture = ExtResource("1_eu5r5")

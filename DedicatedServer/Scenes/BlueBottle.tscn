@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://c4cjikvkmc81e"]
+
+[ext_resource type="Texture2D" uid="uid://dwginaqgif7wg" path="res://Assets/Pirate Bomb/7-Objects/12-Other Objects/Blue Bottle.png" id="1_1h3wo"]
+
+[node name="BlueBottle" type="Node2D"]
+position = Vector2(0, 22)
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_1h3wo")

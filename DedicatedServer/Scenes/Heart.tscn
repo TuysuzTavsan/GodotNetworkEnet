@@ -344,6 +344,8 @@ transitions = ["Start", "Idle", SubResource("AnimationNodeStateMachineTransition
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_r3a3l"]
 
 [node name="Heart" type="StaticBody2D"]
+scale = Vector2(2, 2)
+collision_layer = 2
 script = ExtResource("1_mwgay")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
@@ -364,3 +366,4 @@ anim_player = NodePath("../AnimationPlayer")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_r3a3l")
+debug_color = Color(0.583801, 0.556396, 0.133655, 0.42)

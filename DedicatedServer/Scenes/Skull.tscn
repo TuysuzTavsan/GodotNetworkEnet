@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://ddumls55mrra4"]
+
+[ext_resource type="Texture2D" uid="uid://c3ec872y52ryb" path="res://Assets/Pirate Bomb/7-Objects/12-Other Objects/Skull.png" id="1_d7pvw"]
+
+[node name="Skull" type="Node2D"]
+position = Vector2(0, 26)
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_d7pvw")

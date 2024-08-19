@@ -23,10 +23,7 @@ var m_playerScene : PackedScene = load("res://Scenes/Player.tscn")
 var m_players : Dictionary = {} # Key is id value is the player node.
 var m_netType : Net.Type = Net.Type.UNSPECIFIED
 
-@onready var m_marker1 : Marker2D = $Marker2D
-@onready var m_marker2 : Marker2D = $Marker2D2
-@onready var m_marker3 : Marker2D = $Marker2D3
-@onready var m_marker4 : Marker2D = $Marker2D4
+@onready var m_spawnMarkersPivot : Node2D = $SpawnMarkers
 
 func _ready() -> void:
 	var args : Dictionary = _mFetchArguments()
@@ -188,14 +185,8 @@ func _mAddExistingPlayers(clientId : int, arr : Array) -> void:
 		_mAddNewPlayer.rpc_id(clientId, id)
 
 func _mGetRandomSpawnPosition() -> Vector2:
-	match randi_range(1, 4):
-		1:
-			return m_marker1.position
-		2:
-			return m_marker2.position
-		3:
-			return m_marker3.position
-		4:
-			return m_marker4.position
-	
-	return Vector2(0, 0)
+	var childCount = m_spawnMarkersPivot.get_child_count()
+
+	var randomNumber : int = randi_range(0, childCount - 1)
+
+	return m_spawnMarkersPivot.get_child(randomNumber).position
