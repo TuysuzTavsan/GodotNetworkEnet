@@ -1,7 +1,6 @@
-[gd_scene load_steps=7 format=3 uid="uid://dfmxn8c2hwa58"]
+[gd_scene load_steps=6 format=3 uid="uid://dfmxn8c2hwa58"]
 
-[ext_resource type="Script" path="res://Src/healthBar.gd" id="1_5e3al"]
-[ext_resource type="Texture2D" uid="uid://vctehp0kjcl7" path="res://Assets/Pirate Bomb/7-Objects/11-Health Bar/Health Bar.png" id="2_3d60e"]
+[ext_resource type="Script" path="res://Src/statusBar.gd" id="1_5e3al"]
 [ext_resource type="Texture2D" uid="uid://mip6gsnrvrw5" path="res://Assets/Pirate Bomb/7-Objects/11-Health Bar/Heart.png" id="3_vw1qo"]
 
 [sub_resource type="Animation" id="Animation_e2pcr"]
@@ -90,12 +89,8 @@ _data = {
 "RESET": SubResource("Animation_hghwj")
 }
 
-[node name="HealthBar" type="CanvasLayer"]
+[node name="StatusBar" type="Node2D"]
 script = ExtResource("1_5e3al")
-
-[node name="Background" type="Sprite2D" parent="."]
-texture = ExtResource("2_3d60e")
-centered = false
 
 [node name="Hearth1" type="Sprite2D" parent="."]
 position = Vector2(51, 32)

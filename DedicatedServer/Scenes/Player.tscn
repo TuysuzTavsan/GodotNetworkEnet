@@ -16,7 +16,7 @@
 [ext_resource type="Texture2D" uid="uid://d1rgkk5frug7q" path="res://Assets/Pirate by seartsy/Run-6frm.png" id="13_oim86"]
 [ext_resource type="Script" path="res://Src/inputSyncer.gd" id="15_bf2ta"]
 [ext_resource type="Script" path="res://Src/camera.gd" id="16_yjfo4"]
-[ext_resource type="PackedScene" uid="uid://dfmxn8c2hwa58" path="res://Scenes/HealthBar.tscn" id="17_osg0x"]
+[ext_resource type="PackedScene" uid="uid://dfmxn8c2hwa58" path="res://Scenes/StatusBar.tscn" id="17_osg0x"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_eyedx"]
 atlas = ExtResource("1_l06ka")
@@ -522,6 +522,18 @@ tracks/1/keys = {
 "update": 1,
 "values": [0]
 }
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("RayCast2D:enabled")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
 
 [sub_resource type="Animation" id="Animation_ugfvh"]
 resource_name = "attack1"
@@ -746,6 +758,18 @@ tracks/1/keys = {
 "update": 1,
 "values": [0, 1, 2, 3, 4]
 }
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("RayCast2D:enabled")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
+}
 
 [sub_resource type="Animation" id="Animation_gcpdo"]
 resource_name = "hurt"
@@ -931,4 +955,9 @@ enabled = false
 position_smoothing_enabled = true
 script = ExtResource("16_yjfo4")
 
-[node name="HealthBar" parent="." instance=ExtResource("17_osg0x")]
+[node name="StatusBar" parent="." instance=ExtResource("17_osg0x")]
+position = Vector2(-77, -80)
+
+[node name="RayCast2D" type="RayCast2D" parent="."]
+enabled = false
+target_position = Vector2(300, 0)

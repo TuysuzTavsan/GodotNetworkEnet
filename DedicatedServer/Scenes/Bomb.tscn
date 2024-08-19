@@ -578,6 +578,7 @@ animations = [{
 }]
 
 [node name="Bomb" type="RigidBody2D"]
+collision_layer = 8
 freeze = true
 script = ExtResource("1_vp5ks")
 
@@ -611,3 +612,5 @@ monitorable = false
 position = Vector2(0, -11)
 shape = SubResource("CircleShape2D_k8iky")
 debug_color = Color(0.984254, 0, 0.3707, 0.42)
+
+[connection signal="body_entered" from="Area2D" to="." method="_onBodyEntered"]

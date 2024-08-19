@@ -172,6 +172,7 @@ func _mAddNewPlayer(id : int) -> void:
 	#Set multiplayer authority to given id.
 	if(m_netType == Net.Type.SERVER):
 		player.set_multiplayer_authority(id)
+		player._m_dead.connect(_onPlayerDead)
 	else:
 		player.set_multiplayer_authority(id if multiplayer.get_unique_id() == id else 1)
 		
@@ -190,3 +191,35 @@ func _mGetRandomSpawnPosition() -> Vector2:
 	var randomNumber : int = randi_range(0, childCount - 1)
 
 	return m_spawnMarkersPivot.get_child(randomNumber).position
+
+#Will only triggered on server.
+func _onPlayerDead(player : Player) -> void:
+
+	var playerID : int = m_players.find_key(player)
+
+	if(playerID == null):
+		return
+
+	_mSetPlayerPosition.rpc(playerID, _mGetRandomSpawnPosition()) #Respawn at random position
+	player.m_statusBar._mSetHealth.rpc(3) #Set to max health.
+	_mSetPlayerAsIdleAndAlive.rpc(playerID) #Reset its state to idle from dead.
+	
+@rpc("authority", "call_local", "reliable", 1)
+func _mSetPlayerAsIdleAndAlive(playerID : int) -> void:
+	var player : Player = m_players.get(playerID) as Player
+
+	if(player == null):
+		return
+
+	#Because we dont use states on puppet players.
+	#We need to check for different network types here.
+
+	if(multiplayer.is_server()):
+		player.m_isDead = false #This must be set false first, else below line wont do anything. Player cant change state when dead.
+		player._mChangeState(Player.STATES.IDLE)
+		return
+
+	if(get_tree().get_multiplayer().get_unique_id() == playerID):
+		player._mChangeState(Player.STATES.IDLE)
+		player.m_isDead = false
+		return

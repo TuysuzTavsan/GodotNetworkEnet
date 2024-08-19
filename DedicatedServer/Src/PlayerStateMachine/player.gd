@@ -4,10 +4,16 @@ class_name Player
 #State machine that will handle player.
 #This script is the main handler of the states.
 
+var m_stateType : STATES
 var m_state : PlayerState = null
+var m_isDead : bool = false
 @onready var m_animPlayer : AnimationPlayer = $AnimationPlayer
 @onready var m_animatedSprite : AnimatedSprite2D = $AnimatedSprite2D
 @onready var m_inputSyncer : InputSyncer = $InputSyncer
+@onready var m_statusBar : StatusBar = $StatusBar
+@onready var m_rayCast : RayCast2D = $RayCast2D
+
+signal _m_dead(player : Player)
 
 enum STATES {
 	IDLE,
@@ -15,6 +21,7 @@ enum STATES {
 	JUMP,
 	ATTACK,
 	FIRE,
+	DEAD
 }
 
 static var m_states : Dictionary = {
@@ -22,11 +29,12 @@ static var m_states : Dictionary = {
 	STATES.RUN : PlayerRun,
 	STATES.JUMP : PlayerJump,
 	STATES.ATTACK : PlayerAttack,
-	STATES.FIRE : PlayerFire
+	STATES.FIRE : PlayerFire,
+	STATES.DEAD : PlayerDead
 }
 
 const M_RING_BUFFER_SIZE : int = 256
-const M_SPEED = 300.0
+const M_SPEED = 250.0
 const M_JUMP_VELOCITY = -500.0
 const M_INTERPOLATIN_FACTOR : float = 10.0
 var m_netType : Net.Type = Net.Type.UNSPECIFIED
@@ -55,17 +63,20 @@ func _physics_process(delta: float) -> void:
 
 	if(m_netType == Net.Type.LOCAL):
 		#We need to apply inputs to movement.
-		var latestInputs : InputContainer = m_inputSyncer.mGetLatestInputs() as InputContainer
-		var xDirection : float = latestInputs.mGetxAxisDirection() as float
 
-		_mChangeDirection(xDirection)
+		if(not m_isDead):
+				
+			var latestInputs : InputContainer = m_inputSyncer.mGetLatestInputs() as InputContainer
+			var xDirection : float = latestInputs.mGetxAxisDirection() as float
 
-		if(is_on_floor()):
-			if(latestInputs.mHas(INPUT.Type.JUMP)):
-				velocity.y = delta * m_gravity
+			_mChangeDirection(xDirection)
 
-		velocity.x = xDirection * M_SPEED
-		m_frame += 1
+			if(is_on_floor()):
+				if(latestInputs.mHas(INPUT.Type.JUMP)):
+					velocity.y = delta * m_gravity
+
+			velocity.x = xDirection * M_SPEED
+			m_frame += 1
 
 	move_and_slide()
 
@@ -76,6 +87,12 @@ func _physics_process(delta: float) -> void:
 		m_animatedSprite.position = lerp(m_animatedSprite.position, position, delta * M_INTERPOLATIN_FACTOR)
 
 func _mChangeState(state : STATES, params : Dictionary = {}) -> void:
+	
+	#Can not change state when dead.
+	if(m_isDead):
+		return
+
+	m_stateType = state
 	if(m_state != null):
 		remove_child(m_state) #To force stop listening input from InputSyncer
 		m_state.queue_free()
@@ -92,6 +109,9 @@ func _mChangeState(state : STATES, params : Dictionary = {}) -> void:
 #Function that will be used for only server. Because local players send their inputs to the server only.
 func _onReliableInputReceived(inputContainer : InputContainer, frame : int) -> void:
 	#This function only operates on the server.
+	if(m_isDead):
+		return
+
 	if(frame <= m_frame):
 		Logger.mLogWarning("Received frame is older then current frame. Ignoring input.")
 		return
@@ -100,20 +120,17 @@ func _onReliableInputReceived(inputContainer : InputContainer, frame : int) -> v
 	for input : INPUT.Type in inputContainer.m_events:
 		match input:
 			INPUT.Type.JUMP:
-				
 				#Apply jump force.
 				#We can not simulate jump because of delta time issues.
 				if(is_on_floor()):
-					velocity.y = M_JUMP_VELOCITY		
-
-			INPUT.Type.ATTACK:
-				pass
-			INPUT.Type.FIRE:
-				pass
+					velocity.y = M_JUMP_VELOCITY
 
 #Function that will be used for only server. Because local players send their inputs to the server only.
 func _onUnreliableInputReceived(inputContainer : InputContainer, frame : int) -> void:
 	#This function only operates on the server.
+	if(m_isDead):
+		return
+
 	if(frame <= m_frame):
 		Logger.mLogWarning("Received frame is older then current frame. Ignoring input.")
 		return
@@ -142,6 +159,9 @@ func _mUpdatePos(pos : Vector2, vel : Vector2, frame : int) -> void:
 	if(m_netType != Net.Type.LOCAL):
 		return
 	
+	if(m_isDead):
+		return
+
 	#For local player, we have inputs that server doesnt have yet.
 	#We can use these to simulate up to the current frame.
 
@@ -172,9 +192,15 @@ func _mUpdatePos(pos : Vector2, vel : Vector2, frame : int) -> void:
 @rpc("any_peer", "call_local", "reliable", 1)
 func _mSyncDirection(isLeft : bool) -> void:
 	m_animatedSprite.flip_h = isLeft
+	m_rayCast.target_position = Vector2(-300, 0) if isLeft else Vector2(300, 0)
 
 @rpc("any_peer", "call_local", "reliable", 1)
 func _mPlayAnimation(animName : String) -> void:
+
+	#Can only play dead animation when player is dead.
+	if(m_isDead and animName != "death"):
+		return
+
 	m_animPlayer.play(animName)
 
 func _mChangeDirection(vectorX : float) -> void:

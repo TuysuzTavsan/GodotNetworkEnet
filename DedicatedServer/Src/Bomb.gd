@@ -3,6 +3,8 @@ class_name Bomb
 
 @onready var m_animPlayer : AnimationPlayer = $AnimationPlayer
 
+const M_DAMAGE_HEART : int = 2
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	if(Net.mGetNetworkType(self) != Net.Type.SERVER):
@@ -35,3 +37,13 @@ func _mFree():
 @rpc("authority", "call_local", "reliable", 1)
 func _mPlayAnimation(animName : String) -> void:
 	m_animPlayer.play(animName)
+
+
+func _onBodyEntered(body : Node2D) -> void:	
+	if(body is not Player):
+		return
+
+	var player : Player = body as Player
+
+	player.m_statusBar._mLoseHeart(M_DAMAGE_HEART)
+
