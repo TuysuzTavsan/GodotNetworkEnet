@@ -1,4 +1,4 @@
-[gd_scene load_steps=40 format=3 uid="uid://dswc0hn8u4ame"]
+[gd_scene load_steps=34 format=3 uid="uid://dswc0hn8u4ame"]
 
 [ext_resource type="Script" path="res://Src/heart.gd" id="1_mwgay"]
 [ext_resource type="Texture2D" uid="uid://cgdq2d1rp86nm" path="res://Assets/Pirate Bomb/7-Objects/17-Heart/1-Idle/1.png" id="1_yllim"]
@@ -150,7 +150,7 @@ tracks/1/keys = {
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("CollisionShape2D:disabled")
+tracks/2/path = NodePath("Area2D/CollisionShape2D:disabled")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
@@ -162,7 +162,7 @@ tracks/2/keys = {
 tracks/3/type = "value"
 tracks/3/imported = false
 tracks/3/enabled = true
-tracks/3/path = NodePath("CollisionShape2D:position")
+tracks/3/path = NodePath("Area2D/CollisionShape2D:position")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
@@ -225,7 +225,7 @@ tracks/3/keys = {
 tracks/4/type = "value"
 tracks/4/imported = false
 tracks/4/enabled = true
-tracks/4/path = NodePath("CollisionShape2D:disabled")
+tracks/4/path = NodePath("Area2D/CollisionShape2D:disabled")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/keys = {
@@ -237,7 +237,7 @@ tracks/4/keys = {
 tracks/5/type = "value"
 tracks/5/imported = false
 tracks/5/enabled = true
-tracks/5/path = NodePath("CollisionShape2D:position")
+tracks/5/path = NodePath("Area2D/CollisionShape2D:position")
 tracks/5/interp = 1
 tracks/5/loop_wrap = true
 tracks/5/keys = {
@@ -301,7 +301,7 @@ tracks/3/keys = {
 tracks/4/type = "value"
 tracks/4/imported = false
 tracks/4/enabled = true
-tracks/4/path = NodePath("CollisionShape2D:disabled")
+tracks/4/path = NodePath("Area2D/CollisionShape2D:disabled")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/keys = {
@@ -318,34 +318,10 @@ _data = {
 "taken": SubResource("Animation_o3mpe")
 }
 
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_sa76m"]
-animation = &"Idle"
-
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_8pce3"]
-animation = &"taken"
-
-[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_jc1c7"]
-advance_mode = 2
-
-[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_27gju"]
-
-[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_14xuq"]
-switch_mode = 2
-advance_mode = 2
-
-[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_bkoy6"]
-states/Idle/node = SubResource("AnimationNodeAnimation_sa76m")
-states/Idle/position = Vector2(416, 109)
-states/Start/position = Vector2(201, 109)
-states/taken/node = SubResource("AnimationNodeAnimation_8pce3")
-states/taken/position = Vector2(629, 109)
-transitions = ["Start", "Idle", SubResource("AnimationNodeStateMachineTransition_jc1c7"), "Idle", "taken", SubResource("AnimationNodeStateMachineTransition_27gju"), "taken", "End", SubResource("AnimationNodeStateMachineTransition_14xuq")]
-
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_r3a3l"]
 
-[node name="Heart" type="StaticBody2D"]
+[node name="Heart" type="Node2D"]
 scale = Vector2(2, 2)
-collision_layer = 2
 script = ExtResource("1_mwgay")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
@@ -360,10 +336,10 @@ libraries = {
 }
 autoplay = "Idle"
 
-[node name="AnimationTree" type="AnimationTree" parent="."]
-tree_root = SubResource("AnimationNodeStateMachine_bkoy6")
-anim_player = NodePath("../AnimationPlayer")
+[node name="Area2D" type="Area2D" parent="."]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
 shape = SubResource("RectangleShape2D_r3a3l")
 debug_color = Color(0.583801, 0.556396, 0.133655, 0.42)
+
+[connection signal="body_entered" from="Area2D" to="." method="_onBodyEntered"]

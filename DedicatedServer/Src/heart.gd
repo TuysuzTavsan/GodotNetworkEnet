@@ -1,15 +1,27 @@
-extends StaticBody2D
+extends Node2D
 class_name Heart
 
 #A collectable item to replanish helath
 
-var m_netType : Net.Type = Net.Type.UNSPECIFIED
+@onready var m_animPlayer : AnimationPlayer = $AnimationPlayer
 
-# Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	pass # Replace with function body.
+	if(get_tree().get_multiplayer().is_server()):
+		m_animPlayer.animation_finished.connect(_onAnimFinished)
 
+func _onAnimFinished(animName : String) -> void:
+	if(animName == "taken"):
+		_mFree.rpc()
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
+func _onBodyEntered(body : Node2D) -> void:
+	if(get_tree().get_multiplayer().is_server()):
+		if body is Player:
+			_mPlayAnim.rpc("taken")
+			
+@rpc("authority", "call_local", "reliable", 1)
+func _mFree() -> void:
+	queue_free()
+
+@rpc("authority", "call_local", "reliable", 1)
+func _mPlayAnim(animName : String) -> void:
+	m_animPlayer.play(animName)
