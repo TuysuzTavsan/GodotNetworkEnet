@@ -214,12 +214,12 @@ func _mSetPlayerAsIdleAndAlive(playerID : int) -> void:
 	#Because we dont use states on puppet players.
 	#We need to check for different network types here.
 
+	player.m_isDead = false
+
 	if(multiplayer.is_server()):
-		player.m_isDead = false #This must be set false first, else below line wont do anything. Player cant change state when dead.
 		player._mChangeState(Player.STATES.IDLE)
 		return
 
 	if(get_tree().get_multiplayer().get_unique_id() == playerID):
 		player._mChangeState(Player.STATES.IDLE)
-		player.m_isDead = false
 		return

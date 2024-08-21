@@ -21,7 +21,8 @@ enum STATES {
 	JUMP,
 	ATTACK,
 	FIRE,
-	DEAD
+	DEAD,
+	FALL
 }
 
 static var m_states : Dictionary = {
@@ -30,7 +31,8 @@ static var m_states : Dictionary = {
 	STATES.JUMP : PlayerJump,
 	STATES.ATTACK : PlayerAttack,
 	STATES.FIRE : PlayerFire,
-	STATES.DEAD : PlayerDead
+	STATES.DEAD : PlayerDead,
+	STATES.FALL : PlayerFall
 }
 
 const M_RING_BUFFER_SIZE : int = 256
@@ -60,23 +62,27 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	if(not is_on_floor()):
 		velocity.y += delta * m_gravity
+		_mChangeState(STATES.FALL)
 
 	if(m_netType == Net.Type.LOCAL):
 		#We need to apply inputs to movement.
 
-		if(not m_isDead):
+		if(m_stateType != STATES.DEAD):
+
 				
 			var latestInputs : InputContainer = m_inputSyncer.mGetLatestInputs() as InputContainer
 			var xDirection : float = latestInputs.mGetxAxisDirection() as float
 
 			_mChangeDirection(xDirection)
 
-			if(is_on_floor()):
-				if(latestInputs.mHas(INPUT.Type.JUMP)):
-					velocity.y = delta * m_gravity
+			if(m_stateType != STATES.FIRE and m_stateType != STATES.ATTACK):
+				if(is_on_floor()):
+					if(latestInputs.mHas(INPUT.Type.JUMP)):
+						velocity.y = delta * m_gravity
 
-			velocity.x = xDirection * M_SPEED
-			m_frame += 1
+				velocity.x = xDirection * M_SPEED
+				
+		m_frame += 1
 
 	move_and_slide()
 
@@ -87,9 +93,10 @@ func _physics_process(delta: float) -> void:
 		m_animatedSprite.position = lerp(m_animatedSprite.position, position, delta * M_INTERPOLATIN_FACTOR)
 
 func _mChangeState(state : STATES, params : Dictionary = {}) -> void:
-	
-	#Can not change state when dead.
-	if(m_isDead):
+	if(m_netType == Net.Type.PUPPET):
+		return
+
+	if(m_stateType == state):
 		return
 
 	m_stateType = state
@@ -109,27 +116,21 @@ func _mChangeState(state : STATES, params : Dictionary = {}) -> void:
 #Function that will be used for only server. Because local players send their inputs to the server only.
 func _onReliableInputReceived(inputContainer : InputContainer, frame : int) -> void:
 	#This function only operates on the server.
-	if(m_isDead):
-		return
 
 	if(frame <= m_frame):
 		Logger.mLogWarning("Received frame is older then current frame. Ignoring input.")
 		return
-
-	#For reliableInputs all we check for movement specific is jump input.
-	for input : INPUT.Type in inputContainer.m_events:
-		match input:
-			INPUT.Type.JUMP:
-				#Apply jump force.
-				#We can not simulate jump because of delta time issues.
-				if(is_on_floor()):
-					velocity.y = M_JUMP_VELOCITY
+	
+	if(m_stateType != STATES.DEAD and m_stateType != STATES.ATTACK and m_stateType != STATES.FIRE):
+		#Apply jump force.
+		#We can not simulate jump because of delta time issues.
+		if(inputContainer.mHas(INPUT.Type.JUMP)):
+			if(is_on_floor()):
+				velocity.y = M_JUMP_VELOCITY
 
 #Function that will be used for only server. Because local players send their inputs to the server only.
 func _onUnreliableInputReceived(inputContainer : InputContainer, frame : int) -> void:
 	#This function only operates on the server.
-	if(m_isDead):
-		return
 
 	if(frame <= m_frame):
 		Logger.mLogWarning("Received frame is older then current frame. Ignoring input.")
@@ -137,17 +138,20 @@ func _onUnreliableInputReceived(inputContainer : InputContainer, frame : int) ->
 	
 	var frameDiff : int = frame - m_frame
 
-	#Try to predict players state from latest input.
-	var xDir : float = inputContainer.mGetxAxisDirection() as float
-	for i : int in range(0, frameDiff, 1):
-		velocity.x = xDir * M_SPEED
-
-		move_and_slide()
+	if(m_stateType != STATES.DEAD):
 	
-	m_frame = frame
-	#Send feedback to the local player and puppet from server.
+		if(m_stateType != STATES.ATTACK and m_stateType != STATES.FIRE):
+			#Try to predict players state from latest input.
+			var xDir : float = inputContainer.mGetxAxisDirection() as float
+			for i : int in range(0, frameDiff, 1):
+				velocity.x = xDir * M_SPEED
 
-	_mChangeDirection(xDir)
+				move_and_slide()
+			
+		_mChangeDirection(inputContainer.mGetxAxisDirection() as float)
+
+	#Send feedback to the local player and puppet from server.
+	m_frame = frame
 	_mUpdatePos.rpc(position, velocity, m_frame)
 
 
@@ -180,14 +184,15 @@ func _mUpdatePos(pos : Vector2, vel : Vector2, frame : int) -> void:
 
 	#Re-simulate up to current frame.
 	
-	var inputBuffer : RingBuffer = m_inputSyncer.mGetUnreliableInputBuffer() as RingBuffer
-	for i : int in range(frameDiff, 0, -1):
-		var inputContainer : InputContainer = inputBuffer.mGetwOffset(i) as InputContainer
-		var inputX : float = inputContainer.mGetxAxisDirection()
+	if(m_stateType != STATES.ATTACK and m_stateType != STATES.FIRE):
+		var inputBuffer : RingBuffer = m_inputSyncer.mGetUnreliableInputBuffer() as RingBuffer
+		for i : int in range(frameDiff, 0, -1):
+			var inputContainer : InputContainer = inputBuffer.mGetwOffset(i) as InputContainer
+			var inputX : float = inputContainer.mGetxAxisDirection()
 
-		if(inputX):
-			velocity.x = inputX * M_SPEED
-			move_and_slide()
+			if(inputX):
+				velocity.x = inputX * M_SPEED
+				move_and_slide()
 
 @rpc("any_peer", "call_local", "reliable", 1)
 func _mSyncDirection(isLeft : bool) -> void:

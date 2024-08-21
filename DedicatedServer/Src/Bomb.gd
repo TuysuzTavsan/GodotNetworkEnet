@@ -2,6 +2,7 @@ extends RigidBody2D
 class_name Bomb
 
 @onready var m_animPlayer : AnimationPlayer = $AnimationPlayer
+@onready var m_area : Area2D = $Area2D
 
 const M_DAMAGE_HEART : int = 2
 
@@ -39,11 +40,15 @@ func _mPlayAnimation(animName : String) -> void:
 	m_animPlayer.play(animName)
 
 
-func _onBodyEntered(body : Node2D) -> void:	
+func _onBodyEntered(body : Node2D) -> void:
+	if(not get_tree().get_multiplayer().is_server()):
+		return
+
 	if(body is not Player):
 		return
 
 	var player : Player = body as Player
 
 	player.m_statusBar._mLoseHeart(M_DAMAGE_HEART)
+	
 

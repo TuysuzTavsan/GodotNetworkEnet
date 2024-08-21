@@ -43,15 +43,10 @@ func _mLoseHeart(heartCount : int) -> void:
 
 	var newHeartCount : int  = clampi(m_hearts - heartCount, 0, 3) as int
 
-	if(multiplayer.is_server()):
+	if(get_tree().get_multiplayer().is_server()):
 		_mSetHealth.rpc(newHeartCount)
 	else:
 		_mSetHealth(newHeartCount)
-
-	var player : Player = get_parent() as Player
-
-	if(newHeartCount <= 0):
-		player._mChangeState(Player.STATES.DEAD)
 
 ######################################## PUBLIC FUNCTIONS #######################################
 
@@ -79,6 +74,8 @@ func _mUpdateStatusVisual() -> void:
 func _mSetHealth(heartCount : int) -> void:
 	m_hearts = heartCount
 	_mUpdateStatusVisual()
+	if(heartCount <= 0):
+		m_player._mChangeState(Player.STATES.DEAD)
 
 
 	
