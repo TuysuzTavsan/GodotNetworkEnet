@@ -188,3 +188,22 @@ offset_top = -332.0
 offset_right = 2690.0
 offset_bottom = 1883.0
 color = Color(0.196078, 0.203922, 0.262745, 1)
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 180.0
+one_shot = true
+autostart = true
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="TimeLeftLabel" type="Label" parent="CanvasLayer"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -36.5
+offset_right = 36.5
+offset_bottom = 23.0
+grow_horizontal = 2
+text = "TimeLeft:"
+
+[connection signal="timeout" from="Timer" to="." method="_onTimeout"]

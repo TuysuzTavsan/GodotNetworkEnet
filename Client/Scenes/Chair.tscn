@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://cqpxrf6g8b2e2"]
+
+[ext_resource type="Texture2D" uid="uid://cmr4pra0084u8" path="res://Assets/Pirate Bomb/7-Objects/12-Other Objects/Chair.png" id="1_1h2lv"]
+
+[node name="Chair" type="Node2D"]
+position = Vector2(0, 5)
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_1h2lv")

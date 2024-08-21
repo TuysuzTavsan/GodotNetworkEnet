@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://dhdx243k73v3v"]
+
+[ext_resource type="Texture2D" uid="uid://dfpsw7x011xb" path="res://Assets/Pirate Bomb/7-Objects/12-Other Objects/Red Bottle.png" id="1_yf6yr"]
+
+[node name="RedBottle" type="Node2D"]
+position = Vector2(0, 18)
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_yf6yr")

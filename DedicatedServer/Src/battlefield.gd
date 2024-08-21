@@ -22,6 +22,8 @@ const M_MAX_CHANNELS : int = 2
 var m_playerScene : PackedScene = load("res://Scenes/Player.tscn")
 var m_players : Dictionary = {} # Key is id value is the player node.
 var m_netType : Net.Type = Net.Type.UNSPECIFIED
+@onready var m_timeLeftLabel : Label = $CanvasLayer/TimeLeftLabel
+@onready var m_timer : Timer = $Timer
 
 @onready var m_spawnMarkersPivot : Node2D = $SpawnMarkers
 
@@ -35,6 +37,10 @@ func _ready() -> void:
 
 	_mCreateServer(args)
 	m_netType = Net.Type.SERVER
+
+func _process(_delta: float) -> void:
+	if(multiplayer.is_server()):
+		_mSetRemaningTime.rpc(m_timer.time_left)
 
 func _mCreateClient(args : Dictionary) -> void:
 	multiplayer.connected_to_server.connect(_onConnectedServer)
@@ -104,7 +110,7 @@ func _mFetchArguments() -> Dictionary:
 
 	var arguments = {}
 	for argument in OS.get_cmdline_user_args():
-		if argument.find("="):
+		if (argument.find("=") != -1):
 			var key_value = argument.split("=")
 			arguments[key_value[0].lstrip("--")] = key_value[1]
 		else:
@@ -159,6 +165,9 @@ func _mRemovePlayer(id : int) -> void:
 	var player : Player = m_players.get(id) as Player
 	m_players.erase(id)
 	player.queue_free()
+
+	if(m_players.size() == 0):
+		get_tree().quit()
 
 #This function will be called locally to create a player node that matching client is responsible from.
 #This function will also be called remote to add already existing player on client. (for replication.)
@@ -223,3 +232,12 @@ func _mSetPlayerAsIdleAndAlive(playerID : int) -> void:
 	if(get_tree().get_multiplayer().get_unique_id() == playerID):
 		player._mChangeState(Player.STATES.IDLE)
 		return
+
+func _onTimeout() -> void:
+	if(multiplayer.is_server()):
+		get_tree().quit()
+
+
+@rpc("authority", "call_local", "reliable", 1)
+func _mSetRemaningTime(timeLeft : float) -> void:
+	m_timeLeftLabel.text = str(timeLeft as int)

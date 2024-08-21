@@ -6,6 +6,7 @@ var m_remainingLaunchTime : float = -1.0
 
 @onready var m_label : Label = $MarginContainer/Label
 var m_popUpScene : PackedScene = load("res://Scenes/PopUp.tscn")
+var m_battleFieldScene : PackedScene = load("res://Scenes/Battlefield.tscn")
 var m_isOwner : bool = false
 
 func mInit(isLobbyOwner : bool, launchTime : float = 0.0) -> void:
@@ -23,7 +24,7 @@ func _ready() -> void:
 		Client.mSendPacket(Msg.Type.START_GAME)
 	
 	_mWaitForTimeOut()
-		
+
 
 func mHandle(packetIn : PacketIn) -> void:
 	match packetIn.m_msgType:
@@ -35,11 +36,11 @@ func mHandle(packetIn : PacketIn) -> void:
 					get_parent().add_child(popUp)
 					queue_free()
 				1:
-					var popUp : PopUp = m_popUpScene.instantiate() as PopUp
 					var port : int = packetIn.m_data["port"] as int
-					popUp.mInit("Game server started successfully in port:" + str(port) + ".")
-					get_parent().add_child(popUp)
-					queue_free()
+					var battleField : Battlefield = m_battleFieldScene.instantiate()
+					battleField.mInit(Client.m_ADRESS, port)
+					get_parent().queue_free() #This will also queue free this.
+					get_tree().root.add_child(battleField)
 				2:
 					var popUp : PopUp = m_popUpScene.instantiate() as PopUp
 					popUp.mInit("Server failed to launch.")

@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://otale80nisot"]
+
+[ext_resource type="Texture2D" uid="uid://dtfia6d8v5joo" path="res://Assets/Pirate Bomb/7-Objects/12-Other Objects/Barrel.png" id="1_8k0y4"]
+
+[node name="Barrel" type="Node2D"]
+position = Vector2(0, 11)
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_8k0y4")

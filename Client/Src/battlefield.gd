@@ -1,47 +1,146 @@
-extends Node2D
+extends Node
 class_name Battlefield
 
 #Battlefield is the main node that will manage game on both client and dedicated server.
 #For all @rpc calls to work, every rpc must exist on both projects.
-#Therefore there are a lot of similarities between client Battlefield script - dedicatedServer Battlefield script.
+#To keep things simple and understandable every script related to gameplay is actually same on server and client.
 #Only real difference is how this nodes initialize itself and creates peer for high level networking.
+#Other then that there is no difference in terms of script files. All scripts will have some logic depending on type.
+#	type 1 : server
+#	type 2 : localPlayer = Actual player
+#	type 3 : puppetPlayer = copy of a playerState that exist on server.
+
 #Everytime a player connects we will create player node with authority set to connected peer id.
 #Server will also create same player node with authority set to connected peer id.
 #Every client can only control player node which it owns.
-#For every other player node they have locally, it will be controlled by the server.
-#So basicly the real game is actually exists on the server.
+#Every puppet player will be controlled by the server.
+#So basicly the real game actually exists on the server.
 #What client see is actually a copy of that game state. And client only have control over its player character.
 
-
-
+const M_MAX_CLIENTS : int = 8
+const M_MAX_CHANNELS : int = 2
 var m_playerScene : PackedScene = load("res://Scenes/Player.tscn")
-var m_players : Dictionary = {} #Key=id, value is the Player node.
-var m_address : String = "127.0.0.1" #To playtest this scene with dedicated server running on background.
-var m_port : int = 9999 #To playtest this scene with dedicated server running on background.
+var m_players : Dictionary = {} # Key is id value is the player node.
+var m_netType : Net.Type = Net.Type.UNSPECIFIED
+var m_address : String
+var m_port : int = -1
+var m_mainMenuScene : PackedScene = load("res://Scenes/MainMenu.tscn")
+var m_popUpScene : PackedScene = load("res://Scenes/PopUp.tscn")
 
-# Called when the node enters the scene tree for the first time.
+@onready var m_timeLeftLabel : Label = $CanvasLayer/TimeLeftLabel
+@onready var m_timer : Timer = $Timer
+
+@onready var m_spawnMarkersPivot : Node2D = $SpawnMarkers
+
+func mInit(address : String, port : int) -> void:
+	m_address = address
+	m_port = port
+
 func _ready() -> void:
+	_mCreateClient()
+
+func _process(_delta: float) -> void:
+	if(multiplayer.is_server()):
+		_mSetRemaningTime.rpc(m_timer.time_left)
+
+func _mCreateClient() -> void:
 	multiplayer.connected_to_server.connect(_onConnectedServer)
 	multiplayer.server_disconnected.connect(_onServerDisconnected)
 	multiplayer.connection_failed.connect(_onConnectionFailed)
 
 	var peer : ENetMultiplayerPeer = ENetMultiplayerPeer.new()
+
 	var result = peer.create_client(m_address, m_port, 2)
+
 	if(result != OK):
-		Logger.mLogError("Can not create peer. Aborting application.")
-		get_tree().quit(-1)
+		Logger.mLogError("Can not create client. Aborting application.")
+		_mReturnMainMenuWithMsg("Cant create client")
+		return
 	
-	Logger.mLogInfo("Created peer successfully.")
+	Logger.mLogInfo("Created client successfully.")
 	
 	#This is same as get_tree().get_multiplayer.multiplayer_peer = peer
 	multiplayer.multiplayer_peer = peer
 
-#This function will be called before adding this node to the scene tree.
-#Port and address will be provided from lobbyServer just after dedicated server is initialized.
-func mInit(port : int, address : String) -> void:
-	m_port = port
-	m_address = address
+func _mReturnMainMenuWithMsg(msg : String) -> void:
+	var mainMenu = m_mainMenuScene.instantiate()
+	var popUp : PopUp = m_popUpScene.instantiate() as PopUp
+	popUp.mInit(msg)
+
+	queue_free()
+	get_tree().root.add_child(mainMenu)
+	mainMenu.add_child(popUp)
+
+
+#Create server with fetched arguments.
+func _mCreateServer(args : Dictionary) -> void:
+
+	var address : String = args.get("address") as String
+	var port : int = args.get("port") as int
+	var playerCount : int = args.get("playerCount") as int
+
+	if(address == null):
+		Logger.mLogError("Cant find address information on arguments. Aborting application")
+		get_tree().quit(-1)
+
+	if(port == null):
+		Logger.mLogError("Cant find port information on arguments. Aborting application")
+		get_tree().quit(-1)
+
+	if(playerCount == null):
+		Logger.mLogError("Cant find port playerCount on arguments. Aborting application")
+		get_tree().quit(-1)
+
+	var peer = ENetMultiplayerPeer.new()
+	peer.set_bind_ip(address)
+	var result = peer.create_server(port, M_MAX_CHANNELS, M_MAX_CHANNELS)
+	if(result != OK):
+		Logger.mLogError("Cant create server on address: " + address + ":" + str(port)\
+			+ " aborting application.")
 	
+	Logger.mLogInfo("Created server on address: " + address + ":" + str(port) + ".")
+	
+	#Set multiplayer peer
+	multiplayer.multiplayer_peer = peer
+	
+	#bind signals.
+	multiplayer.peer_connected.connect(_onPeerConnected)
+	multiplayer.peer_disconnected.connect(_onPeerDisconnected)
+
+#Fetch arguments that must be given when launching dedicated server.
+func _mFetchArguments() -> Dictionary:
+	Logger.mLogInfo("Fetching starting arguments.")
+
+	var arguments = {}
+	for argument in OS.get_cmdline_user_args():
+		if argument.find("="):
+			var key_value = argument.split("=")
+			arguments[key_value[0].lstrip("--")] = key_value[1]
+		else:
+			# Options without an argument will be present in the dictionary,
+			# with the value set to an empty string.
+			arguments[argument.lstrip("--")] = ""
+
+	
+	return arguments
+
+
+func _onPeerConnected(id : int) -> void:
+	#Create existing players on new players client with authority set to 1 (server).
+	if(m_players.size() > 0):
+		_mAddExistingPlayers(id, m_players.keys())
+
+	#Create a player for newly connected peer on every client.
+	#This will create a player with authority set to id on dedicated server.
+	_mAddNewPlayer.rpc(id) 
+	if(m_netType == Net.Type.SERVER):
+		_mSetPlayerPosition.rpc(id, _mGetRandomSpawnPosition())
+
+
+func _onPeerDisconnected(id : int) -> void:
+	#Remove disconnected player on every client and this server.
+	_mRemovePlayer.rpc(id)
+
 #Called when connected to server. We dont have to do anything here, since server will call required functions for client.
 #This is here for convenience.
 func _onConnectedServer() -> void:
@@ -51,20 +150,18 @@ func _onConnectedServer() -> void:
 #In normal scenerio server will control clients when the game ends, so if client disconnects before that, thats an error for sure.
 func _onServerDisconnected() -> void:
 	Logger.mLogError("Disconnected from server.")
-	get_tree().quit(-1)
+	_mReturnMainMenuWithMsg("Disconnected from server.")
 
 #Quit the application whenever connectionfails
 func _onConnectionFailed() -> void:
 	Logger.mLogError("Connection failed.")
-	get_tree().quit(-1)
+	_mReturnMainMenuWithMsg("Connection Failed.")
 
 @rpc("authority", "call_local", "reliable", 1)
 func _mSetPlayerPosition(id : int, pos : Vector2) -> void:
 	var player : Player = m_players.get(id) as Player
 	player.position = pos
 
-#Function that will be called from server.
-#Will remove player node that disconnected from server.
 @rpc("authority", "call_local", "reliable", 1)
 func _mRemovePlayer(id : int) -> void:
 	Logger.mLogInfo("removing peer: " + str(id) + ".")
@@ -72,16 +169,78 @@ func _mRemovePlayer(id : int) -> void:
 	m_players.erase(id)
 	player.queue_free()
 
-#Function that will be called from server.
-#Generic function to add a player with authority set to id.
-#This function will be called to replicate already connected clients.
-#This function will be called to create local player.
-#This function will be called whenever new clients connected.
+	if(m_players.size() == 0):
+		_mReturnMainMenuWithMsg("Game is over.")
+
+#This function will be called locally to create a player node that matching client is responsible from.
+#This function will also be called remote to add already existing player on client. (for replication.)
+#Dont get confused. Client will always set authority to 1.
 @rpc("authority", "call_local", "reliable", 1)
 func _mAddNewPlayer(id : int) -> void:
 	Logger.mLogInfo("adding peer: " + str(id) + ".")
 	
 	var player : Player = m_playerScene.instantiate()
-	player.set_multiplayer_authority(id if id == multiplayer.get_unique_id() else 1)
+
+	#Set multiplayer authority to given id.
+	if(m_netType == Net.Type.SERVER):
+		player.set_multiplayer_authority(id)
+		player._m_dead.connect(_onPlayerDead)
+	else:
+		player.set_multiplayer_authority(id if multiplayer.get_unique_id() == id else 1)
+		
+
 	m_players[id] = player
 	add_child(player, true) #Always force readable names so rpc works.
+
+#Add existing players on client with id.
+func _mAddExistingPlayers(clientId : int, arr : Array) -> void:
+	for id in arr:
+		_mAddNewPlayer.rpc_id(clientId, id)
+
+func _mGetRandomSpawnPosition() -> Vector2:
+	var childCount = m_spawnMarkersPivot.get_child_count()
+
+	var randomNumber : int = randi_range(0, childCount - 1)
+
+	return m_spawnMarkersPivot.get_child(randomNumber).position
+
+#Will only triggered on server.
+func _onPlayerDead(player : Player) -> void:
+
+	var playerID : int = m_players.find_key(player)
+
+	if(playerID == null):
+		return
+
+	_mSetPlayerPosition.rpc(playerID, _mGetRandomSpawnPosition()) #Respawn at random position
+	player.m_statusBar._mSetHealth.rpc(3) #Set to max health.
+	_mSetPlayerAsIdleAndAlive.rpc(playerID) #Reset its state to idle from dead.
+	
+@rpc("authority", "call_local", "reliable", 1)
+func _mSetPlayerAsIdleAndAlive(playerID : int) -> void:
+	var player : Player = m_players.get(playerID) as Player
+
+	if(player == null):
+		return
+
+	#Because we dont use states on puppet players.
+	#We need to check for different network types here.
+
+	player.m_isDead = false
+
+	if(multiplayer.is_server()):
+		player._mChangeState(Player.STATES.IDLE)
+		return
+
+	if(get_tree().get_multiplayer().get_unique_id() == playerID):
+		player._mChangeState(Player.STATES.IDLE)
+		return
+
+func _onTimeout() -> void:
+	if(multiplayer.is_server()):
+		get_tree().quit()
+
+
+@rpc("authority", "call_local", "reliable", 1)
+func _mSetRemaningTime(timeLeft : float) -> void:
+	m_timeLeftLabel.text = str(timeLeft as int)

@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://ckxd7ayb5r17c"]
+
+[ext_resource type="Texture2D" uid="uid://buoc6macwx65e" path="res://Assets/Pirate Bomb/7-Objects/12-Other Objects/Table.png" id="1_35d04"]
+
+[node name="Table" type="Node2D"]
+position = Vector2(0, 17)
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_35d04")

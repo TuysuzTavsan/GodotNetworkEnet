@@ -1,0 +1,85 @@
+[gd_scene load_steps=16 format=3 uid="uid://d3expafpok8ds"]
+
+[ext_resource type="Texture2D" uid="uid://biukdacy1nwem" path="res://Assets/Pirate Bomb/7-Objects/6-Candle/1.png" id="1_decff"]
+[ext_resource type="Texture2D" uid="uid://bp5urw6k54jtv" path="res://Assets/Pirate Bomb/7-Objects/6-Candle/2.png" id="2_y24ix"]
+[ext_resource type="Texture2D" uid="uid://cm2jhnkx6ent5" path="res://Assets/Pirate Bomb/7-Objects/6-Candle/3.png" id="3_tp7rd"]
+[ext_resource type="Texture2D" uid="uid://bfjrb4xi764ay" path="res://Assets/Pirate Bomb/7-Objects/6-Candle/4.png" id="4_22ctt"]
+[ext_resource type="Texture2D" uid="uid://iwu3kkgifxsp" path="res://Assets/Pirate Bomb/7-Objects/6-Candle/5.png" id="5_3dqbk"]
+[ext_resource type="Texture2D" uid="uid://2eim03rx6u5p" path="res://Assets/Pirate Bomb/7-Objects/6-Candle/6.png" id="6_ve7el"]
+[ext_resource type="Texture2D" uid="uid://clt76tu0kidd" path="res://Assets/Pirate Bomb/7-Objects/6-Candle/7.png" id="7_8s08j"]
+[ext_resource type="Texture2D" uid="uid://bsid71irr3u1a" path="res://Assets/Pirate Bomb/7-Objects/6-Candle/8.png" id="8_7m1ed"]
+[ext_resource type="Texture2D" uid="uid://bprdejeuhjdkf" path="res://Assets/Pirate Bomb/7-Objects/7-Candle Light/1.png" id="9_dodvj"]
+[ext_resource type="Texture2D" uid="uid://durg7f0cs7df5" path="res://Assets/Pirate Bomb/7-Objects/7-Candle Light/2.png" id="10_csv5a"]
+[ext_resource type="Texture2D" uid="uid://cwuwyopyffrva" path="res://Assets/Pirate Bomb/7-Objects/7-Candle Light/3.png" id="11_akb7l"]
+[ext_resource type="Texture2D" uid="uid://b77nc4dxntw4q" path="res://Assets/Pirate Bomb/7-Objects/7-Candle Light/4.png" id="12_l8h1m"]
+[ext_resource type="Texture2D" uid="uid://cgswjm2hlqfvy" path="res://Assets/Pirate Bomb/7-Objects/7-Candle Light/5.png" id="13_cbp0b"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_xxwor"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_decff")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_y24ix")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_tp7rd")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_22ctt")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_3dqbk")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_ve7el")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_8s08j")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_7m1ed")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_vm4pc"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("9_dodvj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_csv5a")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_akb7l")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_l8h1m")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_cbp0b")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="Candle" type="Node2D"]
+position = Vector2(0, 16)
+
+[node name="AnimatedSprite2D2" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_xxwor")
+autoplay = "default"
+frame_progress = 0.462431
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -13)
+scale = Vector2(0.734736, 0.796553)
+sprite_frames = SubResource("SpriteFrames_vm4pc")
+autoplay = "default"
+frame_progress = 0.937606

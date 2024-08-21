@@ -237,10 +237,22 @@ func _onGameServerLaunchTimer() -> void:
 	Logger.mLogInfo("Launching game server for lobby: " + m_name + " on port: " \
 		+ str(port) + " .")
 
-	_mBroadcast(Msg.Type.START_GAME_FEEDBACK, {
-		"code" : 1,
-		"port" : port,
-	})
+
+	var packedStr = PackedStringArray(["--headless", "--", "--address=127.0.0.1", "--port=" + str(port), "--playerCount=" + str(m_capacity)])
+
+	
+	if(OS.create_process("C:\\Users\\Victus\\Desktop\\Export\\gameServer.exe", packedStr, true) != -1):
+		_mBroadcast(Msg.Type.START_GAME_FEEDBACK, {
+			"code" : 1,
+			"port" : port,
+		})
+	else:
+		_mBroadcast(Msg.Type.START_GAME_FEEDBACK, {
+			"code" : 2,
+		})
+		m_isSealed = false
+
+
 
 func _onLobbyTimeout() -> void:
 	_m_timeOut.emit(self)

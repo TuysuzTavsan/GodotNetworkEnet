@@ -11,11 +11,11 @@ enum Type {
 }
 
 static func mGetNetworkType(node : Node) -> Type:
-	if(node.multiplayer.is_server()):
+	if(node.get_tree().get_multiplayer().is_server()):
 		#This node is in server.
 		return Net.Type.SERVER
-
-	if(node.get_tree().get_multiplayer().get_unique_id() == node.multiplayer.get_unique_id()):
+	
+	if(node.get_tree().get_multiplayer().get_unique_id() == node.get_multiplayer_authority()):
 		#This node is local player.
 		return Net.Type.LOCAL
 
