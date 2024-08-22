@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://b48f851uft07l"]
+
+[ext_resource type="Script" path="res://Src/Singletons/musicPlayer.gd" id="1_f3kal"]
+[ext_resource type="AudioStream" uid="uid://lp0n2p2r3re0" path="res://Assets/Pirate Music Pack/Pirate 2.ogg" id="2_52ddh"]
+
+[node name="MusicPlayer" type="Node"]
+process_mode = 3
+script = ExtResource("1_f3kal")
+
+[node name="MenuMusicPlayer" type="AudioStreamPlayer" parent="."]
+process_mode = 3
+stream = ExtResource("2_52ddh")
+autoplay = true
+parameters/looping = true

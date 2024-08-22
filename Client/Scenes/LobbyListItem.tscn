@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://uonyfi0c5qd1"]
+[gd_scene load_steps=3 format=3 uid="uid://uonyfi0c5qd1"]
 
 [ext_resource type="Script" path="res://Src/lobbyListItem.gd" id="1_54ggq"]
+[ext_resource type="PackedScene" uid="uid://vqk4lob58wah" path="res://Scenes/MyButton.tscn" id="2_ekjhr"]
 
 [node name="LobbyListItem" type="MarginContainer"]
 anchors_preset = 15
@@ -31,7 +32,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 text = "Status"
 
-[node name="JoinButton" type="Button" parent="HBoxContainer"]
+[node name="JoinButton" parent="HBoxContainer" instance=ExtResource("2_ekjhr")]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_type_variation = &"littleButton"

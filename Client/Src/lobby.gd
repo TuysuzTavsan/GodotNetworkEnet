@@ -7,7 +7,7 @@ class_name Lobby
 @onready var m_chatListPivot : VBoxContainer = $MarginContainer/VBoxContainer/HBoxContainer/MarginContainer2/VBoxContainer/ScrollContainer/ChatPivot
 @onready var m_lobbyNameLabel : Label = $MarginContainer/VBoxContainer/MarginContainer/LobbyNameLabel
 @onready var m_startButton : Button = $MarginContainer/VBoxContainer/HBoxContainer2/StartButton
-
+@onready var m_chatScrollContainer : ScrollContainer = $MarginContainer/VBoxContainer/HBoxContainer/MarginContainer2/VBoxContainer/ScrollContainer
 
 var m_lobbyMenuScene : PackedScene = load("res://Scenes/lobbyMenu.tscn")
 var m_playerListItemScene : PackedScene = load("res://Scenes/PlayerListItem.tscn")
@@ -138,11 +138,24 @@ func _mAddMsgFromPlayer(playerName : String, msg : String) -> void:
 	var chatItem : ChatItem = m_chatItemScene.instantiate() as ChatItem
 	chatItem.mInit(playerName + ": " + msg) 
 	m_chatListPivot.add_child(chatItem)
- 
+
+	#I dont know why, but 1 line of this wont work sometimes lol.
+	await get_tree().process_frame
+	await get_tree().process_frame
+
+	m_chatScrollContainer.ensure_control_visible(chatItem)
+
 func _mShowChatMsg(msg : String) -> void:
 	var chatItem : ChatItem = m_chatItemScene.instantiate() as ChatItem
 	chatItem.mInit(msg) 
 	m_chatListPivot.add_child(chatItem)
+
+	#I dont know why, but 1 line of this wont work sometimes lol.
+	await get_tree().process_frame
+	await get_tree().process_frame
+
+	m_chatScrollContainer.ensure_control_visible(chatItem)
+
 
 func _mAddPlayer(playerName : String, isHost : bool, isReady : bool) -> void:
 	var playerListItem : PlayerListItem = m_playerListItemScene.instantiate() as PlayerListItem

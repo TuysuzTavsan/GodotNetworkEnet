@@ -4,7 +4,7 @@ extends Node
 #Will handle packets via m_packetHandler and m_packetDispatcher.
 
 const m_PORT : int = 9999
-const m_ADRESS : String = "127.0.0.1"
+const m_ADRESS : String = "5.180.106.157"
 const m_CHANNELS : int = 2
 const m_MAX_CONNECTIONS : int = 1
 const m_TIME_OUTSEC : int = 10
@@ -117,7 +117,7 @@ func _mPoll() -> void:
 		m_client.EVENT_DISCONNECT:
 			_m_disconnected.emit()
 			mDisconnect() #Will also set m_server to null which is usefull.
-			_mReturnToMainMenuWithPopUp("Disconnected.")
+			_mReturnToMainMenuWithPopUp()
 			
 		m_client.EVENT_ERROR:
 			Logger.mLogError("Error occured in Enet connection. Aborting application.")
@@ -134,16 +134,24 @@ func _mPollConnectionStatus(connection : ENetPacketPeer, seconds : int) -> ENetP
 
 	for second : int in range(0, seconds + 1, 1):
 		await get_tree().create_timer(1).timeout
-		state = connection.get_state()
+		if(connection):
+			state = connection.get_state()
+		else:
+			return ENetPacketPeer.STATE_DISCONNECTED
 
 		if(state == ENetPacketPeer.STATE_CONNECTED or state == ENetPacketPeer.STATE_DISCONNECTED):
 			return state
 	
 	return state
 
-func _mReturnToMainMenuWithPopUp(msgToShow : String) -> void:
+func _mReturnToMainMenuWithPopUp(msgToShow : String = "Disconnected") -> void:
 	for child in get_tree().root.get_children(): #Clean every node.
-		if(child != self):
+	
+		#No need to return to main menu if client is in game.
+		if(child is Battlefield):
+			return
+
+		if(child != self and child != MusicPlayer):
 			child.queue_free()
 
 	var mainMenu = load("res://Scenes/MainMenu.tscn").instantiate()

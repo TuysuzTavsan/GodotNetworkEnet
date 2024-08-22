@@ -5,7 +5,7 @@ class_name Host
 var m_server : ENetConnection = ENetConnection.new()
 const M_MAX_CLIENTS : int = 1024
 const M_MAX_CHANNELS : int = 1
-const M_ADDRESS : String = "127.0.0.1"
+const M_ADDRESS : String = "5.180.106.157"
 const M_PORT : int = 9999
 
 var m_lobbyScene : PackedScene = load("res://Scenes/Lobby.tscn")

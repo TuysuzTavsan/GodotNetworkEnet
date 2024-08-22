@@ -1,8 +1,11 @@
-[gd_scene load_steps=4 format=3 uid="uid://b3trbepjwxbd1"]
+[gd_scene load_steps=5 format=3 uid="uid://b3trbepjwxbd1"]
 
 [ext_resource type="Script" path="res://Src/playerListItem.gd" id="1_scq00"]
 [ext_resource type="Texture2D" uid="uid://c7axvuu502r4" path="res://Assets/Tiny Swords/UI/Icons/Regular_10.png" id="2_h6io6"]
-[ext_resource type="Texture2D" uid="uid://b5ws0r13y11y" path="res://Assets/Tiny Swords/Deco/16.png" id="3_ch5o3"]
+[ext_resource type="PackedScene" uid="uid://vqk4lob58wah" path="res://Scenes/MyButton.tscn" id="3_3gqov"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_0ri80"]
+load_path = "res://.godot/imported/16.png-fbf6ca00cc1cccfdc078acde27017470.ctex"
 
 [node name="PlayerListItem" type="MarginContainer"]
 anchors_preset = 15
@@ -28,15 +31,13 @@ size_flags_vertical = 4
 texture = ExtResource("2_h6io6")
 stretch_mode = 4
 
-[node name="ReadyButton" type="Button" parent="HBoxContainer"]
+[node name="ReadyButton" parent="HBoxContainer" instance=ExtResource("3_3gqov")]
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
 theme_type_variation = &"iconButton"
 disabled = true
 toggle_mode = true
-icon = ExtResource("3_ch5o3")
+icon = SubResource("CompressedTexture2D_0ri80")
 icon_alignment = 1
 expand_icon = true
 

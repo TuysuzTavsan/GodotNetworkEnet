@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://rxnqs8sn6nmv"]
+[gd_scene load_steps=3 format=3 uid="uid://rxnqs8sn6nmv"]
 
 [ext_resource type="Script" path="res://Src/PopUp.gd" id="1_epifh"]
+[ext_resource type="PackedScene" uid="uid://vqk4lob58wah" path="res://Scenes/MyButton.tscn" id="2_duyaj"]
 
 [node name="PopUp" type="Control"]
 process_mode = 3
@@ -42,7 +43,7 @@ vertical_alignment = 1
 custom_minimum_size = Vector2(0, 25)
 layout_mode = 2
 
-[node name="OkButton" type="Button" parent="MarginContainer/VBoxContainer"]
+[node name="OkButton" parent="MarginContainer/VBoxContainer" instance=ExtResource("2_duyaj")]
 layout_mode = 2
 text = "OK"
 

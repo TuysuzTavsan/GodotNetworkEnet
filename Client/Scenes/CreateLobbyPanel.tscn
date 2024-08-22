@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://byqyk021r2cta"]
+[gd_scene load_steps=3 format=3 uid="uid://byqyk021r2cta"]
 
 [ext_resource type="Script" path="res://Src/createLobbyPanel.gd" id="1_xtsfn"]
+[ext_resource type="PackedScene" uid="uid://vqk4lob58wah" path="res://Scenes/MyButton.tscn" id="2_e6rmj"]
 
 [node name="CreateLobbyPanel" type="Control"]
 process_mode = 3
@@ -52,11 +53,10 @@ text = "MaxPlayers"
 layout_mode = 2
 alignment = 1
 icon_alignment = 1
-item_count = 5
 selected = 2
 fit_to_longest_item = false
+item_count = 5
 popup/item_0/text = "2"
-popup/item_0/id = 0
 popup/item_1/text = "3"
 popup/item_1/id = 1
 popup/item_2/text = "4"
@@ -69,11 +69,11 @@ popup/item_4/id = 4
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="CancelButton" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="CancelButton" parent="MarginContainer/VBoxContainer/HBoxContainer" instance=ExtResource("2_e6rmj")]
 layout_mode = 2
 text = "Cancel"
 
-[node name="CreateButton" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="CreateButton" parent="MarginContainer/VBoxContainer/HBoxContainer" instance=ExtResource("2_e6rmj")]
 layout_mode = 2
 disabled = true
 text = "Create"

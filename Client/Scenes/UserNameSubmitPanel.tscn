@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://b7tcrrhx851x2"]
+[gd_scene load_steps=3 format=3 uid="uid://b7tcrrhx851x2"]
 
 [ext_resource type="Script" path="res://Src/userNameSubmit.gd" id="1_j2dx1"]
+[ext_resource type="PackedScene" uid="uid://vqk4lob58wah" path="res://Scenes/MyButton.tscn" id="2_h2nwy"]
 
 [node name="UserNameSubmit" type="Control"]
 process_mode = 3
@@ -44,12 +45,12 @@ layout_mode = 2
 placeholder_text = "Name"
 alignment = 1
 
-[node name="ConnectButton" type="Button" parent="MarginContainer/VBoxContainer"]
+[node name="ConnectButton" parent="MarginContainer/VBoxContainer" instance=ExtResource("2_h2nwy")]
 layout_mode = 2
 disabled = true
 text = "Connect"
 
-[node name="CancelButton" type="Button" parent="MarginContainer/VBoxContainer"]
+[node name="CancelButton" parent="MarginContainer/VBoxContainer" instance=ExtResource("2_h2nwy")]
 layout_mode = 2
 text = "Cancel"
 

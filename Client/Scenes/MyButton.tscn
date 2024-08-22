@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3 uid="uid://vqk4lob58wah"]
+
+[ext_resource type="Script" path="res://Src/myButton.gd" id="1_kh7ou"]
+[ext_resource type="AudioStream" uid="uid://dvvmeo1blfonr" path="res://Assets/Kenney UI Sounds/click1.ogg" id="2_qvgoy"]
+[ext_resource type="AudioStream" uid="uid://prrya57w8emt" path="res://Assets/Kenney UI Sounds/switch24.ogg" id="3_hyf1b"]
+
+[node name="MyButton" type="Button"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_kh7ou")
+
+[node name="Pressed" type="AudioStreamPlayer" parent="."]
+process_mode = 3
+stream = ExtResource("2_qvgoy")
+
+[node name="Hovered" type="AudioStreamPlayer" parent="."]
+process_mode = 3
+stream = ExtResource("3_hyf1b")
+volume_db = -13.065

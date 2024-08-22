@@ -49,6 +49,7 @@ func mAddClient(client : Client) -> void:
 		#1 means success for join lobby feedback.
 		client.mSendMsg(Msg.Type.JOIN_LOBBY_FEEDBACK, 1) 
 		Logger.mLogInfo("Added client to lobby: " + m_name)
+		client.m_isReady = false
 		m_clients.push_back(client)
 
 		#If the size is 1, joined client needs to be informed that its the lobby owner now.
@@ -238,10 +239,10 @@ func _onGameServerLaunchTimer() -> void:
 		+ str(port) + " .")
 
 
-	var packedStr = PackedStringArray(["--headless", "--", "--address=127.0.0.1", "--port=" + str(port), "--playerCount=" + str(m_capacity)])
+	var packedStr = PackedStringArray(["--headless", "--", "--address=" + get_parent().M_ADDRESS, "--port=" + str(port), "--playerCount=" + str(m_capacity)])
 
 	
-	if(OS.create_process("C:\\Users\\Victus\\Desktop\\Export\\gameServer.exe", packedStr, true) != -1):
+	if(OS.create_process("/home/kebap/server/gameServer.x86_64", packedStr, true) != -1):
 		_mBroadcast(Msg.Type.START_GAME_FEEDBACK, {
 			"code" : 1,
 			"port" : port,

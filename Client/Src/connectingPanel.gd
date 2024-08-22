@@ -42,8 +42,8 @@ func _onConnectAttemptResulted(result : bool, userName : String) -> void:
 
 	else:
 		popUp.mInit("Failed to connect server.")
-		get_parent().add_child(popUp) #Add it as mainMenu child.
-		queue_free()
+		get_parent().get_parent().add_child(popUp) #Add it as mainMenu child.
+		get_parent().queue_free()
 
 func _mAnimateConnectingString(delta : float) -> void:
 	m_timerSum += delta

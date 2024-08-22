@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://0xn6v7yx0v0g"]
+[gd_scene load_steps=3 format=3 uid="uid://0xn6v7yx0v0g"]
 
 [ext_resource type="Script" path="res://Src/lobby.gd" id="1_5qd6j"]
+[ext_resource type="PackedScene" uid="uid://vqk4lob58wah" path="res://Scenes/MyButton.tscn" id="2_p3voj"]
 
 [node name="Lobby" type="Control"]
 layout_mode = 3
@@ -77,6 +78,7 @@ vertical_alignment = 1
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 size_flags_vertical = 3
+horizontal_scroll_mode = 0
 
 [node name="PlayersPivot" type="VBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer/VBoxContainer/ScrollContainer"]
 layout_mode = 2
@@ -99,6 +101,7 @@ layout_mode = 2
 [node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer2/VBoxContainer"]
 custom_minimum_size = Vector2(400, 200)
 layout_mode = 2
+follow_focus = true
 
 [node name="ChatPivot" type="VBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer2/VBoxContainer/ScrollContainer"]
 layout_mode = 2
@@ -111,10 +114,8 @@ layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "Enter Text"
 
-[node name="SendButton" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer2/VBoxContainer/HBoxContainer"]
+[node name="SendButton" parent="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer2/VBoxContainer/HBoxContainer" instance=ExtResource("2_p3voj")]
 layout_mode = 2
-size_flags_horizontal = 8
-theme_type_variation = &"littleButton"
 disabled = true
 text = "Send Message"
 
@@ -125,12 +126,11 @@ layout_mode = 2
 [node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="ReturnButton" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer2"]
+[node name="ReturnButton" parent="MarginContainer/VBoxContainer/HBoxContainer2" instance=ExtResource("2_p3voj")]
 layout_mode = 2
-size_flags_horizontal = 0
 text = "Return"
 
-[node name="StartButton" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer2"]
+[node name="StartButton" parent="MarginContainer/VBoxContainer/HBoxContainer2" instance=ExtResource("2_p3voj")]
 layout_mode = 2
 disabled = true
 text = "Start Game"

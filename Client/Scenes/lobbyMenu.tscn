@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://0e5rob0yp7wh"]
+[gd_scene load_steps=3 format=3 uid="uid://0e5rob0yp7wh"]
 
 [ext_resource type="Script" path="res://Src/lobbyMenu.gd" id="1_i0nq0"]
+[ext_resource type="PackedScene" uid="uid://vqk4lob58wah" path="res://Scenes/MyButton.tscn" id="2_b732h"]
 
 [node name="LobbyMenu" type="Control"]
 layout_mode = 3
@@ -77,7 +78,7 @@ size_flags_horizontal = 3
 text = "Status"
 vertical_alignment = 1
 
-[node name="RefreshButton" type="Button" parent="MarginContainer/VBoxContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="RefreshButton" parent="MarginContainer/VBoxContainer/MarginContainer/VBoxContainer/HBoxContainer" instance=ExtResource("2_b732h")]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_type_variation = &"littleButton"
@@ -100,7 +101,7 @@ layout_mode = 2
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="ReturnButton" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="ReturnButton" parent="MarginContainer/VBoxContainer/HBoxContainer" instance=ExtResource("2_b732h")]
 layout_mode = 2
 text = "Return"
 
@@ -108,7 +109,7 @@ text = "Return"
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 
-[node name="CreateLobbyButton" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="CreateLobbyButton" parent="MarginContainer/VBoxContainer/HBoxContainer" instance=ExtResource("2_b732h")]
 layout_mode = 2
 text = "Create Lobby"
 
