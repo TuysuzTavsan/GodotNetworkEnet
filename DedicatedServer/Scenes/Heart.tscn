@@ -1,4 +1,4 @@
-[gd_scene load_steps=34 format=3 uid="uid://dswc0hn8u4ame"]
+[gd_scene load_steps=35 format=3 uid="uid://dswc0hn8u4ame"]
 
 [ext_resource type="Script" path="res://Src/heart.gd" id="1_mwgay"]
 [ext_resource type="Texture2D" uid="uid://cgdq2d1rp86nm" path="res://Assets/Pirate Bomb/7-Objects/17-Heart/1-Idle/1.png" id="1_yllim"]
@@ -27,6 +27,7 @@
 [ext_resource type="Texture2D" uid="uid://byhcv32iuk6dx" path="res://Assets/Pirate Bomb/7-Objects/17-Heart/2-Live+1/2.png" id="24_684us"]
 [ext_resource type="Texture2D" uid="uid://crrd8hp6vid8p" path="res://Assets/Pirate Bomb/7-Objects/17-Heart/2-Live+1/3.png" id="25_jevvb"]
 [ext_resource type="Texture2D" uid="uid://dip538ip678ml" path="res://Assets/Pirate Bomb/7-Objects/17-Heart/2-Live+1/4.png" id="26_rcown"]
+[ext_resource type="AudioStream" uid="uid://bi2k26iw72x6l" path="res://Assets/Sweet Sounds/WAV/Powerup.wav" id="28_o8u28"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_yay4g"]
 animations = [{
@@ -246,6 +247,18 @@ tracks/5/keys = {
 "update": 0,
 "values": [Vector2(0, 0)]
 }
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("AudioStreamPlayer2D:playing")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
 
 [sub_resource type="Animation" id="Animation_o3mpe"]
 resource_name = "taken"
@@ -310,6 +323,18 @@ tracks/4/keys = {
 "update": 1,
 "values": [true]
 }
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("AudioStreamPlayer2D:playing")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_f6apn"]
 _data = {
@@ -343,5 +368,9 @@ collision_layer = 4
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
 shape = SubResource("RectangleShape2D_r3a3l")
 debug_color = Color(0.583801, 0.556396, 0.133655, 0.42)
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("28_o8u28")
+volume_db = -8.0
 
 [connection signal="body_entered" from="Area2D" to="." method="_onBodyEntered"]

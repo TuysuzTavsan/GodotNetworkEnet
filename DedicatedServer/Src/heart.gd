@@ -8,17 +8,17 @@ const M_REGEN_HEART : int = 1
 @onready var m_animPlayer : AnimationPlayer = $AnimationPlayer
 
 func _ready() -> void:
-	if(get_tree().get_multiplayer().is_server()):
+	if(multiplayer.is_server()):
 		m_animPlayer.animation_finished.connect(_onAnimFinished)
 
 func _onAnimFinished(animName : String) -> void:
-	if(not get_tree().get_multiplayer().is_server()):
+	if(not multiplayer.is_server()):
 		return
 	if(animName == "taken"):
 		_mFree.rpc()
 
 func _onBodyEntered(body : Node2D) -> void:
-	if(not get_tree().get_multiplayer().is_server()):
+	if(not multiplayer.is_server()):
 		return
 	
 	if(body is not Player):

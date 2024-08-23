@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://bxmngi26qolee"
+path="res://.godot/imported/Drink.wav-f586e4b46696cfbdced6c450463bd2de.sample"
+
+[deps]
+
+source_file="res://Assets/Sweet Sounds/WAV/Drink.wav"
+dest_files=["res://.godot/imported/Drink.wav-f586e4b46696cfbdced6c450463bd2de.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=0

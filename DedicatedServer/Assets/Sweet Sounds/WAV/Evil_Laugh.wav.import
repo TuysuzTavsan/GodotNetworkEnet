@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://biotk8c7887cv"
+path="res://.godot/imported/Evil_Laugh.wav-cba7a5082790eb7e8faac1fb258dcb35.sample"
+
+[deps]
+
+source_file="res://Assets/Sweet Sounds/WAV/Evil_Laugh.wav"
+dest_files=["res://.godot/imported/Evil_Laugh.wav-cba7a5082790eb7e8faac1fb258dcb35.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=0

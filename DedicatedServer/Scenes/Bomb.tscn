@@ -1,4 +1,4 @@
-[gd_scene load_steps=40 format=3 uid="uid://dwohakjjf1mqw"]
+[gd_scene load_steps=41 format=3 uid="uid://dwohakjjf1mqw"]
 
 [ext_resource type="Texture2D" uid="uid://ck3mc3auft2a3" path="res://Assets/Pirate Bomb/7-Objects/1-BOMB/3-Explotion/1.png" id="1_63xwy"]
 [ext_resource type="Script" path="res://Src/Bomb.gd" id="1_vp5ks"]
@@ -31,6 +31,7 @@
 [ext_resource type="Texture2D" uid="uid://utb7rwuqi0h0" path="res://Assets/Pirate Bomb/7-Objects/3-Bomb Bar/1-Charging Bar/9.png" id="29_uqmfc"]
 [ext_resource type="Texture2D" uid="uid://6ul1goxbdrg1" path="res://Assets/Pirate Bomb/7-Objects/3-Bomb Bar/1-Charging Bar/10.png" id="30_u8cnu"]
 [ext_resource type="Texture2D" uid="uid://c43i1o3vpymm0" path="res://Assets/Pirate Bomb/7-Objects/3-Bomb Bar/1-Charging Bar/11.png" id="31_5k8bs"]
+[ext_resource type="AudioStream" uid="uid://cjb53td2jyhy4" path="res://Assets/SoundEffects/8bit_bomb_explosion.wav" id="32_gixft"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_eyeph"]
 animations = [{
@@ -129,7 +130,7 @@ tracks/1/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(0, 0)]
+"values": [Vector2(1, 7)]
 }
 tracks/2/type = "value"
 tracks/2/imported = false
@@ -263,6 +264,18 @@ tracks/12/keys = {
 "update": 1,
 "values": [true]
 }
+tracks/13/type = "value"
+tracks/13/imported = false
+tracks/13/enabled = true
+tracks/13/path = NodePath("ExplosionSound:playing")
+tracks/13/interp = 1
+tracks/13/loop_wrap = true
+tracks/13/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
 
 [sub_resource type="Animation" id="Animation_rtr1c"]
 resource_name = "explode"
@@ -347,10 +360,10 @@ tracks/6/path = NodePath("Area2D/CollisionShape2D:position")
 tracks/6/interp = 1
 tracks/6/loop_wrap = true
 tracks/6/keys = {
-"times": PackedFloat32Array(0, 0.5, 1),
-"transitions": PackedFloat32Array(1, 1, 1),
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(0, -11), Vector2(0, -11), Vector2(0, -11)]
+"values": [Vector2(0.666667, -4.66667), Vector2(0.666667, -4)]
 }
 tracks/7/type = "value"
 tracks/7/imported = false
@@ -371,10 +384,10 @@ tracks/8/path = NodePath("Area2D/CollisionShape2D:disabled")
 tracks/8/interp = 1
 tracks/8/loop_wrap = true
 tracks/8/keys = {
-"times": PackedFloat32Array(0, 1.5),
-"transitions": PackedFloat32Array(1, 1),
+"times": PackedFloat32Array(0, 1, 1.5),
+"transitions": PackedFloat32Array(1, 1, 1),
 "update": 1,
-"values": [false, true]
+"values": [false, true, true]
 }
 tracks/9/type = "value"
 tracks/9/imported = false
@@ -395,6 +408,18 @@ tracks/10/path = NodePath(".:freeze")
 tracks/10/interp = 1
 tracks/10/loop_wrap = true
 tracks/10/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/11/type = "value"
+tracks/11/imported = false
+tracks/11/enabled = true
+tracks/11/path = NodePath("ExplosionSound:playing")
+tracks/11/interp = 1
+tracks/11/loop_wrap = true
+tracks/11/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
@@ -427,7 +452,7 @@ tracks/1/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(0, 0)]
+"values": [Vector2(0, 9)]
 }
 tracks/2/type = "value"
 tracks/2/imported = false
@@ -534,7 +559,7 @@ _data = {
 }
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_22urq"]
-radius = 13.4536
+radius = 15.3478
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_oqgl3"]
 animations = [{
@@ -579,11 +604,14 @@ animations = [{
 
 [node name="Bomb" type="RigidBody2D"]
 collision_layer = 8
+collision_mask = 17
+mass = 30.0
 freeze = true
 script = ExtResource("1_vp5ks")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(-1, -20)
+scale = Vector2(1.5, 1.5)
 sprite_frames = SubResource("SpriteFrames_eyeph")
 animation = &"Fire"
 
@@ -595,16 +623,20 @@ autoplay = "fire"
 speed_scale = 3.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(1, 7)
+scale = Vector2(1.5, 1.5)
 shape = SubResource("CircleShape2D_22urq")
 
 [node name="ProgressBar" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -30)
+scale = Vector2(1.5, 1.5)
 sprite_frames = SubResource("SpriteFrames_oqgl3")
 animation = &"charging"
 autoplay = "charging"
 frame = 10
 
 [node name="Area2D" type="Area2D" parent="."]
+scale = Vector2(1.5, 1.5)
 monitoring = false
 monitorable = false
 
@@ -612,5 +644,8 @@ monitorable = false
 position = Vector2(0, -11)
 shape = SubResource("CircleShape2D_k8iky")
 debug_color = Color(0.984254, 0, 0.3707, 0.42)
+
+[node name="ExplosionSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("32_gixft")
 
 [connection signal="body_entered" from="Area2D" to="." method="_onBodyEntered"]

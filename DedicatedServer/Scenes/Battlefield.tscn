@@ -82,8 +82,7 @@ scenes/11/scene = ExtResource("3_w1o62")
 
 [sub_resource type="TileSet" id="TileSet_6wtyu"]
 tile_size = Vector2i(64, 64)
-physics_layer_0/collision_layer = 1
-physics_layer_0/collision_mask = 0
+physics_layer_0/collision_layer = 16
 sources/0 = SubResource("TileSetAtlasSource_dooqs")
 sources/1 = SubResource("TileSetScenesCollectionSource_uh0fm")
 

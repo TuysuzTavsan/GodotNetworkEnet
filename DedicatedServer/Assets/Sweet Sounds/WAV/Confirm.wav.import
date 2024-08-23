@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://i2wb52swl47j"
+path="res://.godot/imported/Confirm.wav-8f8e1eac163b267b9b7a0f7ce0616523.sample"
+
+[deps]
+
+source_file="res://Assets/Sweet Sounds/WAV/Confirm.wav"
+dest_files=["res://.godot/imported/Confirm.wav-8f8e1eac163b267b9b7a0f7ce0616523.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=0
