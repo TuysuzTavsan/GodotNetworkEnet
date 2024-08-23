@@ -16,4 +16,4 @@ func _onAnimationFinished(animName : String) -> void:
 
 func _physics_process(_delta: float) -> void:
 	if(m_player.is_on_floor()):
-		m_player._mChangeAnimation("land")	
+		m_player._mChangeAnimation("land")

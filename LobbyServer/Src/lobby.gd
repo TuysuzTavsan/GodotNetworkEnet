@@ -233,7 +233,14 @@ func _mBroadcast(type : Msg.Type, data) -> void:
 
 func _onGameServerLaunchTimer() -> void:
 		
-	var port : int = randi_range(7000, 9998)
+	var port : int = get_parent()._mGetAvailableRandomPort() as int
+
+	if(port == -1):
+		_mBroadcast(Msg.Type.START_GAME_FEEDBACK, {
+			"code" : 2,
+		})
+		m_isSealed = false
+		return
 	
 	Logger.mLogInfo("Launching game server for lobby: " + m_name + " on port: " \
 		+ str(port) + " .")
@@ -242,7 +249,7 @@ func _onGameServerLaunchTimer() -> void:
 	var packedStr = PackedStringArray(["--headless", "--", "--address=" + get_parent().M_ADDRESS, "--port=" + str(port), "--playerCount=" + str(m_capacity)])
 
 	
-	if(OS.create_process("/home/kebap/server/gameServer.x86_64", packedStr, true) != -1):
+	if(OS.create_process("C:\\Users\\Victus\\Desktop\\server\\gameServer.exe", packedStr, true) != -1):
 		_mBroadcast(Msg.Type.START_GAME_FEEDBACK, {
 			"code" : 1,
 			"port" : port,
@@ -252,6 +259,12 @@ func _onGameServerLaunchTimer() -> void:
 			"code" : 2,
 		})
 		m_isSealed = false
+	
+	await get_tree().create_timer(10).timeout
+	for client : Client in m_clients:
+		client.m_eNetPeer.peer_disconnect_later()
+	
+	_m_timeOut.emit(self)
 
 
 

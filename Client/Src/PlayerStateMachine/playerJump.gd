@@ -6,3 +6,7 @@ class_name  PlayerJump
 
 func _ready() -> void:
 	m_player._mChangeAnimation("jump")
+
+func _physics_process(_delta: float) -> void:
+	if(m_player.velocity.y > 0):
+		m_changeState.call(Player.STATES.FALL)

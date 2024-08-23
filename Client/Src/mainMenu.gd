@@ -1,6 +1,8 @@
 extends Control
 
 var m_userNameSubmitPanelScene : PackedScene = load("res://Scenes/UserNameSubmitPanel.tscn")
+var m_creditScene : PackedScene = load("res://Scenes/CreditScene.tscn")
+
 @onready var m_volumeSlider : HSlider = $MarginContainer/VBoxContainer2/VBoxContainer2/HBoxContainer/HSlider
 
 func _ready() -> void:
@@ -21,3 +23,7 @@ func _onQuitPressed() -> void:
 func _onVolumeValChanged(value:float) -> void:
 	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Master"), linear_to_db(value))
 
+func _onCreditsPressed() -> void:
+	var creditScene = m_creditScene.instantiate()
+	queue_free()
+	get_parent().add_child(creditScene)

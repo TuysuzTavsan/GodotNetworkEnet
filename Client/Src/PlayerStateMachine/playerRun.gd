@@ -20,7 +20,8 @@ func _onReliableInput(inputContainer : InputContainer, _frame : int) -> void:
 	for input : INPUT.Type in inputContainer.m_events:
 		match input:
 			INPUT.Type.JUMP:
-				m_changeState.call(Player.STATES.JUMP)
+				if(m_player.is_on_floor()):
+					m_changeState.call(Player.STATES.JUMP)
 
 			INPUT.Type.ATTACK:
 				m_changeState.call(Player.STATES.ATTACK)
@@ -34,7 +35,8 @@ func _physics_process(_delta: float) -> void:
 	for input : INPUT.Type in inputContainer.m_events:
 		match input:
 			INPUT.Type.JUMP:
-				m_changeState.call(Player.STATES.JUMP)
+				if(m_player.is_on_floor()):
+					m_changeState.call(Player.STATES.JUMP)
 
 			INPUT.Type.ATTACK:
 				m_changeState.call(Player.STATES.ATTACK)

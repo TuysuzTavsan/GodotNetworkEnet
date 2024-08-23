@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://dykqa1ggi0gt8"
+path="res://.godot/imported/Thunder.wav-253fbe6387a618fc71105e7a17e8decd.sample"
+
+[deps]
+
+source_file="res://Assets/Sweet Sounds/WAV/Thunder.wav"
+dest_files=["res://.godot/imported/Thunder.wav-253fbe6387a618fc71105e7a17e8decd.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=0

@@ -82,8 +82,7 @@ scenes/11/scene = ExtResource("3_w1o62")
 
 [sub_resource type="TileSet" id="TileSet_6wtyu"]
 tile_size = Vector2i(64, 64)
-physics_layer_0/collision_layer = 1
-physics_layer_0/collision_mask = 0
+physics_layer_0/collision_layer = 16
 sources/0 = SubResource("TileSetAtlasSource_dooqs")
 sources/1 = SubResource("TileSetScenesCollectionSource_uh0fm")
 
@@ -121,6 +120,30 @@ position = Vector2(360, 516)
 
 [node name="Marker2D4" type="Marker2D" parent="SpawnMarkers"]
 position = Vector2(751, 123)
+
+[node name="Marker2D5" type="Marker2D" parent="SpawnMarkers"]
+position = Vector2(1488, 507)
+
+[node name="Marker2D6" type="Marker2D" parent="SpawnMarkers"]
+position = Vector2(1499, 218)
+
+[node name="Marker2D7" type="Marker2D" parent="SpawnMarkers"]
+position = Vector2(848, 869)
+
+[node name="Marker2D8" type="Marker2D" parent="SpawnMarkers"]
+position = Vector2(327, 832)
+
+[node name="Marker2D9" type="Marker2D" parent="SpawnMarkers"]
+position = Vector2(279, 1102)
+
+[node name="Marker2D10" type="Marker2D" parent="SpawnMarkers"]
+position = Vector2(599, 936)
+
+[node name="Marker2D11" type="Marker2D" parent="SpawnMarkers"]
+position = Vector2(-173, 741)
+
+[node name="Marker2D12" type="Marker2D" parent="SpawnMarkers"]
+position = Vector2(-282, 405)
 
 [node name="HeartSPawners" type="Node2D" parent="."]
 

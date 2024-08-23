@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://dl5ctstb37wp0"
+path="res://.godot/imported/Cat_Meow.wav-53a444350eac8e76f53d5bc8dab7c6c7.sample"
+
+[deps]
+
+source_file="res://Assets/Sweet Sounds/WAV/Cat_Meow.wav"
+dest_files=["res://.godot/imported/Cat_Meow.wav-53a444350eac8e76f53d5bc8dab7c6c7.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=0

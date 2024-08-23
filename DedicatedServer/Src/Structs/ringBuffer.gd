@@ -17,3 +17,10 @@ func mGetwOffset(offset : int):
 	assert(offset < m_buffer.size(), "offset cant be more then buffer size.")
 
 	return m_buffer[(m_index - offset) % m_buffer.size()]
+
+func mHas(data) -> bool:
+	for thing in m_buffer:
+		if(thing == data):
+			return true
+			
+	return false

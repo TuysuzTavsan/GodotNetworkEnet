@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://ddibm2at4smw"
+path="res://.godot/imported/Phone_Ring.wav-6948ee2760c6f568cbf7a811fc8ad79e.sample"
+
+[deps]
+
+source_file="res://Assets/Sweet Sounds/WAV/Phone_Ring.wav"
+dest_files=["res://.godot/imported/Phone_Ring.wav-6948ee2760c6f568cbf7a811fc8ad79e.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=0

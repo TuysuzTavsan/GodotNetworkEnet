@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://bstob3aoacvhd"
+path="res://.godot/imported/Laser_Gun.wav-20b22e2afe74b36adda5effb79f95f3c.sample"
+
+[deps]
+
+source_file="res://Assets/Sweet Sounds/WAV/Laser_Gun.wav"
+dest_files=["res://.godot/imported/Laser_Gun.wav-20b22e2afe74b36adda5effb79f95f3c.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=0

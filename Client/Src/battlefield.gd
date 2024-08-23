@@ -26,6 +26,8 @@ var m_address : String
 var m_port : int = -1
 var m_mainMenuScene : PackedScene = load("res://Scenes/MainMenu.tscn")
 var m_popUpScene : PackedScene = load("res://Scenes/PopUp.tscn")
+var m_escapeMenuScene : PackedScene = load("res://Scenes/GameEscapeMenu.tscn")
+var m_lastSpawnPositions : RingBuffer = RingBuffer.new(M_MAX_CLIENTS -1)
 
 @onready var m_timeLeftLabel : Label = $CanvasLayer/TimeLeftLabel
 @onready var m_timer : Timer = $Timer
@@ -39,9 +41,16 @@ func mInit(address : String, port : int) -> void:
 func _ready() -> void:
 	_mCreateClient()
 
+func _input(event: InputEvent) -> void:
+	if(event.is_action_pressed("ui_cancel")):
+		var escapeMenu = m_escapeMenuScene.instantiate()
+		add_child(escapeMenu)
+		get_viewport().set_input_as_handled()
+
 func _process(_delta: float) -> void:
 	if(multiplayer.is_server()):
 		_mSetRemaningTime.rpc(m_timer.time_left)
+
 
 func _mCreateClient() -> void:
 	multiplayer.connected_to_server.connect(_onConnectedServer)
@@ -54,7 +63,7 @@ func _mCreateClient() -> void:
 
 	if(result != OK):
 		Logger.mLogError("Can not create client. Aborting application.")
-		_mReturnMainMenuWithMsg("Cant create client")
+		mReturnMainMenuWithMsg("Cant create client")
 		return
 	
 	Logger.mLogInfo("Created client successfully.")
@@ -62,7 +71,7 @@ func _mCreateClient() -> void:
 	#This is same as get_tree().get_multiplayer.multiplayer_peer = peer
 	multiplayer.multiplayer_peer = peer
 
-func _mReturnMainMenuWithMsg(msg : String) -> void:
+func mReturnMainMenuWithMsg(msg : String) -> void:
 	var mainMenu = m_mainMenuScene.instantiate()
 	var popUp : PopUp = m_popUpScene.instantiate() as PopUp
 	popUp.mInit(msg)
@@ -150,12 +159,12 @@ func _onConnectedServer() -> void:
 #In normal scenerio server will control clients when the game ends, so if client disconnects before that, thats an error for sure.
 func _onServerDisconnected() -> void:
 	Logger.mLogError("Disconnected from server.")
-	_mReturnMainMenuWithMsg("Disconnected from server.")
+	mReturnMainMenuWithMsg("Disconnected from server.")
 
 #Quit the application whenever connectionfails
 func _onConnectionFailed() -> void:
 	Logger.mLogError("Connection failed.")
-	_mReturnMainMenuWithMsg("Connection Failed.")
+	mReturnMainMenuWithMsg("Connection Failed.")
 
 @rpc("authority", "call_local", "reliable", 1)
 func _mSetPlayerPosition(id : int, pos : Vector2) -> void:
@@ -170,7 +179,7 @@ func _mRemovePlayer(id : int) -> void:
 	player.queue_free()
 
 	if(m_players.size() == 0):
-		_mReturnMainMenuWithMsg("Game is over.")
+		mReturnMainMenuWithMsg("Game is over.")
 
 #This function will be called locally to create a player node that matching client is responsible from.
 #This function will also be called remote to add already existing player on client. (for replication.)
@@ -199,10 +208,16 @@ func _mAddExistingPlayers(clientId : int, arr : Array) -> void:
 
 func _mGetRandomSpawnPosition() -> Vector2:
 	var childCount = m_spawnMarkersPivot.get_child_count()
-
 	var randomNumber : int = randi_range(0, childCount - 1)
+	var pos = m_spawnMarkersPivot.get_child(randomNumber).position
 
-	return m_spawnMarkersPivot.get_child(randomNumber).position
+
+	while(m_lastSpawnPositions.mHas(pos)):
+		randomNumber = randi_range(0, childCount -1)
+		pos = m_spawnMarkersPivot.get_child(randomNumber).position
+
+	m_lastSpawnPositions.mPushBack(pos)
+	return pos
 
 #Will only triggered on server.
 func _onPlayerDead(player : Player) -> void:
@@ -243,4 +258,4 @@ func _onTimeout() -> void:
 
 @rpc("authority", "call_local", "reliable", 1)
 func _mSetRemaningTime(timeLeft : float) -> void:
-	m_timeLeftLabel.text = str(timeLeft as int)
+	m_timeLeftLabel.text = "TimeLeft: " + str(timeLeft as int)

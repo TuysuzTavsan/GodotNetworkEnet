@@ -7,6 +7,8 @@ var m_hearts : int = 3
 @onready var m_heart2 : Node2D = $Hearth2
 @onready var m_heart3 : Node2D = $Hearth3
 
+@onready var m_hurtSound : AudioStreamPlayer2D = $HurtSound
+
 var m_player : Player = null
 
 func _ready() -> void:
@@ -41,15 +43,27 @@ func _mLoseHeart(heartCount : int) -> void:
 	if(m_player.m_netType == Net.Type.PUPPET):
 		return
 
+	if(m_player.m_netType == Net.Type.LOCAL):
+		m_hurtSound.play()
+		return
+
 	var newHeartCount : int  = clampi(m_hearts - heartCount, 0, 3) as int
 
-	if(get_tree().get_multiplayer().is_server()):
+	if(multiplayer.is_server()):
+		_mPlayHurtSound.rpc()
 		_mSetHealth.rpc(newHeartCount)
-	else:
-		_mSetHealth(newHeartCount)
 
 ######################################## PUBLIC FUNCTIONS #######################################
 
+@rpc("authority", "call_local", "reliable", 1)
+func _mPlayHurtSound() -> void:
+
+	#We play this effect on local and dont need server on local players.
+	if(m_player.m_netType == Net.Type.LOCAL):
+		return
+
+	#Only play this on puppet players.
+	m_hurtSound.play()
 
 func _mUpdateStatusVisual() -> void:
 	match m_hearts:

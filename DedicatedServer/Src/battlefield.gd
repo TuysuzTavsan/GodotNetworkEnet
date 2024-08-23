@@ -22,6 +22,7 @@ const M_MAX_CHANNELS : int = 2
 var m_playerScene : PackedScene = load("res://Scenes/Player.tscn")
 var m_players : Dictionary = {} # Key is id value is the player node.
 var m_netType : Net.Type = Net.Type.UNSPECIFIED
+var m_lastSpawnPositions : RingBuffer = RingBuffer.new(M_MAX_CLIENTS -1)
 @onready var m_timeLeftLabel : Label = $CanvasLayer/TimeLeftLabel
 @onready var m_timer : Timer = $Timer
 
@@ -90,7 +91,7 @@ func _mCreateServer(args : Dictionary) -> void:
 
 	var peer = ENetMultiplayerPeer.new()
 	peer.set_bind_ip(address)
-	var result = peer.create_server(port, M_MAX_CHANNELS, M_MAX_CHANNELS)
+	var result = peer.create_server(port, playerCount, M_MAX_CHANNELS)
 	if(result != OK):
 		Logger.mLogError("Cant create server on address: " + address + ":" + str(port)\
 			+ " aborting application.")
@@ -196,10 +197,18 @@ func _mAddExistingPlayers(clientId : int, arr : Array) -> void:
 
 func _mGetRandomSpawnPosition() -> Vector2:
 	var childCount = m_spawnMarkersPivot.get_child_count()
-
 	var randomNumber : int = randi_range(0, childCount - 1)
+	var pos = m_spawnMarkersPivot.get_child(randomNumber).position
 
-	return m_spawnMarkersPivot.get_child(randomNumber).position
+
+	while(m_lastSpawnPositions.mHas(pos)):
+		randomNumber = randi_range(0, childCount -1)
+		pos = m_spawnMarkersPivot.get_child(randomNumber).position
+
+	m_lastSpawnPositions.mPushBack(pos)
+	return pos
+
+		
 
 #Will only triggered on server.
 func _onPlayerDead(player : Player) -> void:

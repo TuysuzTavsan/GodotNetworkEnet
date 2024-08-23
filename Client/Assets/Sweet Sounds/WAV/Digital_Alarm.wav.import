@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://bf65kfnusw3p7"
+path="res://.godot/imported/Digital_Alarm.wav-69889dc7183c59503c0adce068067a67.sample"
+
+[deps]
+
+source_file="res://Assets/Sweet Sounds/WAV/Digital_Alarm.wav"
+dest_files=["res://.godot/imported/Digital_Alarm.wav-69889dc7183c59503c0adce068067a67.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=0

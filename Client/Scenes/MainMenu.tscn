@@ -100,6 +100,13 @@ max_value = 1.0
 step = 0.01
 value = 0.5
 
+[node name="CreditButton" type="Button" parent="MarginContainer/VBoxContainer2/VBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+text = "Credit for Assets."
+
 [connection signal="pressed" from="MarginContainer/VBoxContainer2/VBoxContainer/VBoxContainer/Play" to="." method="_onPlayPressed"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer2/VBoxContainer/VBoxContainer/Quit" to="." method="_onQuitPressed"]
 [connection signal="value_changed" from="MarginContainer/VBoxContainer2/VBoxContainer2/HBoxContainer/HSlider" to="." method="_onVolumeValChanged"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer2/VBoxContainer2/CreditButton" to="." method="_onCreditsPressed"]

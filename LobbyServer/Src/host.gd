@@ -5,12 +5,14 @@ class_name Host
 var m_server : ENetConnection = ENetConnection.new()
 const M_MAX_CLIENTS : int = 1024
 const M_MAX_CHANNELS : int = 1
-const M_ADDRESS : String = "5.180.106.157"
+const M_ADDRESS : String = "127.0.0.1"
 const M_PORT : int = 9999
 
+var m_gameServerScene : PackedScene = load("res://Scenes/GameServer.tscn")
 var m_lobbyScene : PackedScene = load("res://Scenes/Lobby.tscn")
 var m_clients : Array[Client] = []
 var m_lobbies : Array[Lobby] = []
+var m_gameServers : Dictionary = {} #Key is port, value is the node.
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -247,5 +249,24 @@ func _mGetClient(packetPeer : ENetPacketPeer) -> Client:
 	Logger.mLogError("Can not find specified packetPeer in m_clients.")
 	return null
 
+
+func _mGetAvailableRandomPort() -> int:
+	var randomPort : int = -1
+	randomPort = randi_range(7001, 9998)
+
+	
+	while(m_gameServers.get(randomPort) != null):
+		randomPort = randi_range(7001, 9998)
+
+	var gameServer : GameServer = m_gameServerScene.instantiate() as GameServer
+	gameServer._m_GameServerFree.connect(_onGameServerFree)
+	add_child(gameServer)
+	m_gameServers[randomPort] = gameServer
+	gameServer.m_port = randomPort
+
+	return randomPort
+
+func _onGameServerFree(gameServer : GameServer) -> void:
+	m_gameServers.erase(gameServer.m_port)
 
 ################################# PRIVATE FUNCTIONS #########################################

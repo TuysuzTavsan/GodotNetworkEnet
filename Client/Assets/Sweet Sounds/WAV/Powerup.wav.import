@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://bi2k26iw72x6l"
+path="res://.godot/imported/Powerup.wav-d7ff6d35dc71006963e5943c57aa2437.sample"
+
+[deps]
+
+source_file="res://Assets/Sweet Sounds/WAV/Powerup.wav"
+dest_files=["res://.godot/imported/Powerup.wav-d7ff6d35dc71006963e5943c57aa2437.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=0
