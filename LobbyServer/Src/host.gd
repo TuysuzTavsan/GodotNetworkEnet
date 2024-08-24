@@ -2,11 +2,19 @@ extends Node
 class_name Host
 
 
+#Main node of the lobbyServer.
+#Will handle client messages.
+#Will forward lobby specific mesages to lobbies.
+#Manager of the lobby and gameserver nodes.
+
 var m_server : ENetConnection = ENetConnection.new()
 const M_MAX_CLIENTS : int = 1024
 const M_MAX_CHANNELS : int = 1
 const M_ADDRESS : String = "127.0.0.1"
 const M_PORT : int = 9999
+const M_GAME_SERVER_PORT_START : int = 7001
+const M_GAME_SERVER_PORT_END : int = 9998
+const M_GAME_SERVER_PATH : String = "ABSOLUTE FULL PATH TO YOUR GAME SERVER.exe"
 
 var m_gameServerScene : PackedScene = load("res://Scenes/GameServer.tscn")
 var m_lobbyScene : PackedScene = load("res://Scenes/Lobby.tscn")
@@ -252,11 +260,11 @@ func _mGetClient(packetPeer : ENetPacketPeer) -> Client:
 
 func _mGetAvailableRandomPort() -> int:
 	var randomPort : int = -1
-	randomPort = randi_range(7001, 9998)
+	randomPort = randi_range(M_GAME_SERVER_PORT_START, M_GAME_SERVER_PORT_END)
 
 	
 	while(m_gameServers.get(randomPort) != null):
-		randomPort = randi_range(7001, 9998)
+		randomPort = randi_range(M_GAME_SERVER_PORT_START, M_GAME_SERVER_PORT_END)
 
 	var gameServer : GameServer = m_gameServerScene.instantiate() as GameServer
 	gameServer._m_GameServerFree.connect(_onGameServerFree)

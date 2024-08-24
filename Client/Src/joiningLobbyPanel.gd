@@ -37,6 +37,7 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	_mAnimateConnectingString(delta)
 
+#Called whenever subscribed packet type is received.
 func mHandle(packetIn : PacketIn) -> void:
 	match packetIn.m_msgType:
 		Msg.Type.JOIN_LOBBY_FEEDBACK:

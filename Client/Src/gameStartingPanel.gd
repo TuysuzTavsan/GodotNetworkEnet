@@ -25,7 +25,7 @@ func _ready() -> void:
 	
 	_mWaitForTimeOut()
 
-
+#Called whenever subscribed packet type is received.
 func mHandle(packetIn : PacketIn) -> void:
 	match packetIn.m_msgType:
 		Msg.Type.START_GAME_FEEDBACK:

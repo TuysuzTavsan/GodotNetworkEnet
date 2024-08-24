@@ -1,6 +1,6 @@
 extends Node
 
-#Client Singleton that will connect to server and manage network related events.
+#Client Singleton that will connect to lobbyServer and manage network related events.
 #Will handle packets via m_packetHandler and m_packetDispatcher.
 
 const m_PORT : int = 9999

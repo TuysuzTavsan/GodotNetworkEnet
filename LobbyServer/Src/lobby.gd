@@ -7,6 +7,7 @@ class_name Lobby
 #Everytime a client creates lobby, Host will create lobby and add this node as child. Host will also keep a reference to this node in Host.m_lobbies.
 #Also check the timer nodes and their settings in Lobby.tscn to fully understand how it operates.
 
+
 var m_clients : Array[Client] = [] #Clients that are in this lobby.
 var m_owner : Client = null # Owner of this lobby. By Default it is the client who created this.
 var m_name : String = "" # Name of this lobby.
@@ -248,8 +249,7 @@ func _onGameServerLaunchTimer() -> void:
 
 	var packedStr = PackedStringArray(["--headless", "--", "--address=" + get_parent().M_ADDRESS, "--port=" + str(port), "--playerCount=" + str(m_capacity)])
 
-	
-	if(OS.create_process("C:\\Users\\Victus\\Desktop\\server\\gameServer.exe", packedStr, true) != -1):
+	if(OS.create_process(get_parent().M_GAME_SERVER_PATH, packedStr, true) != -1):
 		_mBroadcast(Msg.Type.START_GAME_FEEDBACK, {
 			"code" : 1,
 			"port" : port,

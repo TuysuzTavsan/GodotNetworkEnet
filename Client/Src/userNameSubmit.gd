@@ -5,7 +5,6 @@ class_name UserNameSubmitPanel
 @onready var m_connectButton : Button = $MarginContainer/VBoxContainer/ConnectButton
 
 var m_connectingPanelScene : PackedScene = load("res://Scenes/ConnectingPanel.tscn")
-signal _m_UserNameSubmitted(name : String)
 
 func _enter_tree() -> void:
 	get_tree().paused = true

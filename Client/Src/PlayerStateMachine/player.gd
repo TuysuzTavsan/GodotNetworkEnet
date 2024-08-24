@@ -1,8 +1,11 @@
 extends CharacterBody2D
 class_name Player
 
-#State machine that will handle player.
-#This script is the main handler of the states.
+#Player is a stateMachine
+#States are responsible from animations, sounds, hitboxes.
+#This script is responsible from movement-direction sync.
+#Puppet player will not use states.
+#States are specific to local player and server.
 
 var m_stateType : STATES = STATES.UNSPECIFIED
 var m_state : PlayerState = null

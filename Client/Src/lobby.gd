@@ -41,6 +41,7 @@ func _ready() -> void:
 
 ########################################### PUBLIC FUNCTIONS ################################################
 
+#Called whenever subscribed packet type is received.
 func mHandle(packetIn : PacketIn) -> void:
 	match packetIn.m_msgType:
 		Msg.Type.READY_FEEDBACK:

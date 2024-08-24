@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=4 uid="uid://bfalyaeipbhsi"]
+[gd_scene load_steps=21 format=4 uid="uid://bfalyaeipbhsi"]
 
 [ext_resource type="Script" path="res://Src/battlefield.gd" id="1_7l0bi"]
 [ext_resource type="Texture2D" uid="uid://djhbp1er0rku0" path="res://Assets/Pirate Bomb/8-Tile-Sets/Tile-Sets (64-64).png" id="1_qqa7o"]
@@ -16,6 +16,7 @@
 [ext_resource type="PackedScene" uid="uid://ct0vgjn8f110i" path="res://Scenes/Spawner.tscn" id="14_s3fsh"]
 [ext_resource type="PackedScene" uid="uid://dswc0hn8u4ame" path="res://Scenes/Heart.tscn" id="15_os37c"]
 [ext_resource type="PackedScene" uid="uid://dwohakjjf1mqw" path="res://Scenes/Bomb.tscn" id="17_47snf"]
+[ext_resource type="PackedScene" uid="uid://br5jtpbpcgsqk" path="res://Scenes/Tutorial.tscn" id="17_t368f"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_dooqs"]
 texture = ExtResource("1_qqa7o")
@@ -228,5 +229,7 @@ offset_right = 36.5
 offset_bottom = 23.0
 grow_horizontal = 2
 text = "TimeLeft:"
+
+[node name="Tutorial" parent="." instance=ExtResource("17_t368f")]
 
 [connection signal="timeout" from="Timer" to="." method="_onTimeout"]
