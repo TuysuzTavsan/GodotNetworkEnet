@@ -224,10 +224,12 @@ autostart = true
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -36.5
-offset_right = 36.5
-offset_bottom = 23.0
+offset_left = -53.0
+offset_top = 25.0
+offset_right = 52.0
+offset_bottom = 64.0
 grow_horizontal = 2
+theme_override_colors/font_color = Color(1, 1, 0, 1)
 text = "TimeLeft:"
 
 [node name="Tutorial" parent="." instance=ExtResource("17_t368f")]
