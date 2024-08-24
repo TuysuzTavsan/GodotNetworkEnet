@@ -44,3 +44,14 @@ These arguments are:
 > Or you could simply luanch dedicated servers on the same machine with LobbyServer and it would still work pretty much the same.
 > This project demonstrates exactly that. In real world multiplayer games, tasks that servers need to handle are seperated into different machines in different locations.
 > And there are good reasons for that. This project tries to keep it simple yet realistic in that way.
+
+
+> [!IMPORTANT]
+> I do not own any assets used for in this project. Thanks for making these assets.
+> 1-https://pixelfrog-assets.itch.io/tiny-swords
+> 2-https://pixelfrog-assets.itch.io/pirate-bomb
+> 3-https://seartsy.itch.io/free-pirate
+> 4-hhttps://coffeevalenbat.itch.io/sweet-sounds-sfx-pack
+> 5-https://opengameart.org/content/library-of-game-sounds
+> 6-https://alkakrab.itch.io/free-pirate-game-music-pack
+> 7-https://kenney.nl/assets/ui-audio
