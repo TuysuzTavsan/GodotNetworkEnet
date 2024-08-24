@@ -48,10 +48,10 @@ These arguments are:
 
 > [!IMPORTANT]
 > I do not own any assets used for in this project. Thanks for making these assets.
-> 1-https://pixelfrog-assets.itch.io/tiny-swords
-> 2-https://pixelfrog-assets.itch.io/pirate-bomb
-> 3-https://seartsy.itch.io/free-pirate
-> 4-hhttps://coffeevalenbat.itch.io/sweet-sounds-sfx-pack
-> 5-https://opengameart.org/content/library-of-game-sounds
-> 6-https://alkakrab.itch.io/free-pirate-game-music-pack
-> 7-https://kenney.nl/assets/ui-audio
+> - 1-https://pixelfrog-assets.itch.io/tiny-swords
+> - 2-https://pixelfrog-assets.itch.io/pirate-bomb
+> - 3-https://seartsy.itch.io/free-pirate
+> - 4-hhttps://coffeevalenbat.itch.io/sweet-sounds-sfx-pack
+> - 5-https://opengameart.org/content/library-of-game-sounds
+> - 6-https://alkakrab.itch.io/free-pirate-game-music-pack
+> - 7-https://kenney.nl/assets/ui-audio
