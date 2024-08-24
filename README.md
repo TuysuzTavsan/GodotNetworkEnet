@@ -30,14 +30,14 @@ These arguments are:
  After that specific lobby will be freed and clients will try to connect gameServer on given port.
 
 # Minimal Project Setup.
-
-1- Change IP Addresses & ports on LobbyServer/Client project. (in LobbyServer constants are located in host.gd, in Client constants are located in client.gd)
-2- Change gameServer absolute path to your taste.
-3- Export projects for your desired system.
-4- On server machine, open ports in range (7000-9999 as default but you can change port range on host.gd). Also check firewall.
-5- Place GameServer in matching absolute directory that you set in step 2.
-5- Run LobbyServer.
-6- Now you should be able to connect from client project and play. If not, double check IP adresses / ports / gameServer absolute path.
+ You can test locally, or on vds vps, dedicated server.
+- 1- Change IP Addresses & ports on LobbyServer/Client project. (in LobbyServer constants are located in host.gd, in Client constants are located in client.gd)
+- 2- Change gameServer absolute path to your taste.
+- 3- Export projects for your desired system.
+- 4- On server machine, open ports in range (7000-9999 as default but you can change port range on host.gd). Also check firewall.
+- 5- Place GameServer in matching absolute directory that you set in step 2.
+- 5- Run LobbyServer.
+- 6- Now you should be able to connect from client project and play. If not, double check IP adresses / ports / gameServer absolute path.
 
 > [!NOTE]
 > Now its up to you to extend this project to something which lobbyServer deploys dedicated servers on a seperate machine.
