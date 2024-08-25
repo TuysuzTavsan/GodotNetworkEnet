@@ -1,14 +1,16 @@
 
 ## Standalone Godot Multiplayer Proof of Concept.
- This project aims to demonstrate multiplayer game architecture with minimal setup.
+- This project aims to demonstrate multiplayer game architecture with minimal setup.
 Also a proof of concept for me to test my skills.
 You can explore source code to learn some stuff, clone project and make some changes, or playtest it.
-You can also use lobbyServer for your project. While developing your dream multiplayer game, you will be in need of multiplayer backend to help you out.
-Maybe you need a lobby system to test your dedicated servers. While you decide which backend you should choose, you can use this project as a placeholder.
-Or you can start to write your own backend. Until then LobbyServer might help you out.
+You can also use lobbyServer for your project. Maybe you need a lobby or matchmaking system to test your dedicated servers.
+While you decide which backend you should choose, you can use this project as a placeholder.
+Or you can start to write your solutions. Until then LobbyServer might help you out (a bit).
 
-![]([https://github.com/Your_Repository_Name/Your_GIF_Name.gif](https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExN3I5MmVxcG02bTQ1Mndidnlkc2pnYnUxbHY2MjB2NWl3d292YnJseiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/ecPLI6hSnNJSUgnQiZ/giphy.webp))
-![]([https://github.com/Your_Repository_Name/Your_GIF_Name.gif](https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExOXF1cXRrcGt0YXUxM3o4ODE3cnFiaTUweHg2dXp6NTVpbjBhZzhqMCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/eEhbKJ6R5KH9GqiJG4/giphy.gif))
+<p align="center">
+  <img src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExYzFoaTdvZjAwZDc0bm41Z3Z6amNkbWk1cmJ5aGlpd3F0ZDdsN253aiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/WsjNQeS6MLhEsxXRHF/giphy.webp" width="500"/>
+  <img src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExNWlqenlva29vaHhoajZ4YjVrcng2emo4anhiMXFvaTZ3eDcyY3M0NiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/O8qlZDH6OQKU6pT0n3/giphy.webp" width="500"/>
+</p>
 
 > [!IMPORTANT]
 > While this repo is made for an example. This project is not beginner friendly.
@@ -22,7 +24,7 @@ Or you can start to write your own backend. Until then LobbyServer might help yo
 - 3-Dedicated Server: This is very similiar to client project in code, but it will manage game and every player. This is your typical authoritave game server. Networking is made with high level godot rpc system
 
 # How it works?
- LobbyServer should be running in a port forwarded machine. Every client is free to explore lobbies, chat and start game sessions.
+LobbyServer should be running in a port forwarded machine. Every client is free to explore lobbies, chat and start game sessions.
 Whenever a game session is started by lobby owner, lobbyServer will launch dedicated server with some arguments passed into it.
 These arguments are:
 
@@ -50,7 +52,7 @@ These arguments are:
 
 
 > [!IMPORTANT]
-> I do not own any assets used for in this project. Thanks for making these assets.
+> I do not own any assets used in this project. Thanks for making these assets and sharing them.
 > - 1-https://pixelfrog-assets.itch.io/tiny-swords
 > - 2-https://pixelfrog-assets.itch.io/pirate-bomb
 > - 3-https://seartsy.itch.io/free-pirate
