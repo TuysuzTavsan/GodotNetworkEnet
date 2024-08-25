@@ -7,6 +7,9 @@ You can also use lobbyServer for your project. While developing your dream multi
 Maybe you need a lobby system to test your dedicated servers. While you decide which backend you should choose, you can use this project as a placeholder.
 Or you can start to write your own backend. Until then LobbyServer might help you out.
 
+![]([https://github.com/Your_Repository_Name/Your_GIF_Name.gif](https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExN3I5MmVxcG02bTQ1Mndidnlkc2pnYnUxbHY2MjB2NWl3d292YnJseiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/ecPLI6hSnNJSUgnQiZ/giphy.webp))
+![]([https://github.com/Your_Repository_Name/Your_GIF_Name.gif](https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExOXF1cXRrcGt0YXUxM3o4ODE3cnFiaTUweHg2dXp6NTVpbjBhZzhqMCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/eEhbKJ6R5KH9GqiJG4/giphy.gif))
+
 > [!IMPORTANT]
 > While this repo is made for an example. This project is not beginner friendly.
 > If you are just made your way in game networking, I highly suggest to start with simple examples.
