@@ -8,8 +8,8 @@ While you decide which backend you should choose, you can use this project as a 
 Or you can start to write your solutions. Until then LobbyServer might help you out (a bit).
 
 <p align="center">
-  <img src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExYzFoaTdvZjAwZDc0bm41Z3Z6amNkbWk1cmJ5aGlpd3F0ZDdsN253aiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/WsjNQeS6MLhEsxXRHF/giphy.webp" width="500"/>
-  <img src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExNWlqenlva29vaHhoajZ4YjVrcng2emo4anhiMXFvaTZ3eDcyY3M0NiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/O8qlZDH6OQKU6pT0n3/giphy.webp" width="500"/>
+  <img src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExYzFoaTdvZjAwZDc0bm41Z3Z6amNkbWk1cmJ5aGlpd3F0ZDdsN253aiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/WsjNQeS6MLhEsxXRHF/giphy.webp" width="350"/>
+  <img src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExNWlqenlva29vaHhoajZ4YjVrcng2emo4anhiMXFvaTZ3eDcyY3M0NiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/O8qlZDH6OQKU6pT0n3/giphy.webp" width="350"/>
 </p>
 
 > [!IMPORTANT]
