@@ -1,5 +1,5 @@
 
-## Standalone Godot Multiplayer Proof of Concept.
+# Standalone Godot Multiplayer Proof of Concept.
 - This project aims to demonstrate multiplayer game architecture with minimal setup.
 Also a proof of concept for me to test my skills.
 You can explore source code to learn some stuff, clone project and make some changes, or playtest it.
@@ -12,7 +12,7 @@ Or you can start to write your solutions. Until then LobbyServer might help you 
   <img src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExNWlqenlva29vaHhoajZ4YjVrcng2emo4anhiMXFvaTZ3eDcyY3M0NiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/O8qlZDH6OQKU6pT0n3/giphy.webp" width="350"/>
 </p>
 
-- Youtube showcase link -> https://youtu.be/etoccA7Z-Rk
+## Youtube showcase link -> https://youtu.be/etoccA7Z-Rk
 
 > [!IMPORTANT]
 > While this repo is made for an example. This project is not beginner friendly.
