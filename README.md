@@ -2,10 +2,11 @@
 # Standalone Godot Multiplayer Proof of Concept.
 - This project aims to demonstrate multiplayer game architecture with minimal setup.
 Also a proof of concept for me to test my skills.
-You can explore source code to learn some stuff, clone project and make some changes, or playtest it.
+- I tried to keep it low effort, but also a real case scenerio where clients only send input to the game server. I also implemented client prediction and server reconciliation.
+- You can explore source code to learn some stuff, clone project and make some changes, or playtest it.
 You can also use lobbyServer for your project. Maybe you need a lobby or matchmaking system to test your dedicated servers.
-While you decide which backend you should choose, you can use this project as a placeholder.
-Or you can start to write your solutions. Until then LobbyServer might help you out (a bit).
+- While you decide which backend you should choose, you can use this project as a placeholder.
+Or you can start to write your own solutions. Until then LobbyServer might help you out (a bit).
 
 <p align="center">
   <img src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExYzFoaTdvZjAwZDc0bm41Z3Z6amNkbWk1cmJ5aGlpd3F0ZDdsN253aiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/WsjNQeS6MLhEsxXRHF/giphy.webp" width="350"/>
