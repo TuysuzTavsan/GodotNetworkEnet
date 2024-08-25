@@ -12,6 +12,8 @@ Or you can start to write your solutions. Until then LobbyServer might help you 
   <img src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExNWlqenlva29vaHhoajZ4YjVrcng2emo4anhiMXFvaTZ3eDcyY3M0NiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/O8qlZDH6OQKU6pT0n3/giphy.webp" width="350"/>
 </p>
 
+- Youtube showcase link -> https://youtu.be/etoccA7Z-Rk
+
 > [!IMPORTANT]
 > While this repo is made for an example. This project is not beginner friendly.
 > If you are just made your way in game networking, I highly suggest to start with simple examples.
@@ -49,7 +51,6 @@ These arguments are:
 > Or you could simply luanch dedicated servers on the same machine with LobbyServer and it would still work pretty much the same.
 > This project demonstrates exactly that. In real world multiplayer games, tasks that servers need to handle are seperated into different machines in different locations.
 > And there are good reasons for that. This project tries to keep it simple yet realistic in that way.
-
 
 > [!IMPORTANT]
 > I do not own any assets used in this project. Thanks for making these assets and sharing them.
